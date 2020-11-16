@@ -1,0 +1,44 @@
+﻿#login {
+  background: url(../img/macro-1452987_1920.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  height: 94vh;
+  align-content: center;
+  color: black;
+}
+
+#login-form {
+  width: 96.5vw;
+}
+
+#account {
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 2rem;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#sharedBackground {
+  /*changeThisLaterPlease*/
+  min-height: 88.7vh;
+}
+
+.card {
+  border: none;
+}
+
+.page-link {
+  background-color: #5a5c69 !important;
+  color: #fff !important;
+  border-color: rebeccapurple !important;
+}
+
+.dataTables_info {
+  color: #bbb !important;
+}
+
+label {
+  color: #bbb !important;
+}

@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BugTracker2020.Services
+@model IEnumerable<BugTracker2020.Models.Project>
+@inject UserManager<BTUser> UserManager
+@inject IBTProjectsService ProjectsService
+@inject IBTAccessService AccessService
+
+@{
+  ViewData["Title"] = "My Projects";
+  var userId = UserManager.GetUserId(User);
+  var roleName = (await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User))).FirstOrDefault();
+  //var user = await UserManager.GetUserAsync(User);
+  //var roleName2 = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
+  //string userId2 = user.Id;
+}
+
+<div class="container pt-3 text-gray-200">
+  <h1 class="text-center border-bottom-light rounded">My Projects</h1>
+
+  @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+  {
+    <p>
+      <a asp-action="Create" class="btn btn-dark border mt-2">Create New</a>
+    </p>
+  }
+  <table class="table table-bordered table-dark">
+    <thead class="bg-gradient-dark text-gray-200">
+      <tr>
+        <th>
+          Project Name
+        </th>
+        <th>
+          Project Image
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @if (Model.Any() == false)
+      {
+        <tr>
+          <td>No Projects Assigned</td>
+          <td></td>
+          <td></td>
+        </tr>
+      }
+      else
+      {
+        @foreach (var item in Model)
+        {
+          <tr>
+            <td style="vertical-align: middle;">
+              @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td style="vertical-align: middle;">
+              ImageModal
+            </td>
+            <td style="vertical-align: middle;">
+              @if (await AccessService.CanAccessProject(userId, item.Id, roleName))
+              {
+                <a asp-action="AddImage" asp-route-id="@item.Id" class="btn btn-dark border">Add Image</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark border">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark border">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-dark border">Delete</a>
+              }
+            </td>
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+  <a asp-action="Index" class="btn btn-dark border">Back To All Projects</a>
+</div>

@@ -1,0 +1,128 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BugTracker2020.Services
+@model IEnumerable<BugTracker2020.Models.Ticket>
+@inject UserManager<BTUser> UserManager
+@inject IBTAccessService AccessService
+
+@{
+  ViewData["Title"] = "Tickets Index";
+  var userId = UserManager.GetUserId(User);
+  var roleName = (await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User))).FirstOrDefault();
+  //var user = await UserManager.GetUserAsync(User);
+  //var roleName2 = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
+  //string userId2 = user.Id;
+}
+<div class="pt-3 px-3">
+  <h1 class="text-center border-bottom-light rounded text-gray-200">All Tickets</h1>
+  <div class="table-responsive-xxl">
+    @if (TempData["Naughty"] != null)
+    {
+      <h3>@TempData["Naughty"]</h3>
+    }
+
+    <p>
+      <a asp-action="Create" class="btn btn-dark border mt-2">Create New</a>
+      <a asp-action="MyTickets" class="btn btn-dark border mt-2">My Tickets</a>
+    </p>
+    <table class="table table-fixed table-dark table-bordered rounded">
+      <thead class="bg-gradient-dark text-gray-200">
+        <tr>
+          <th>
+            @Html.DisplayNameFor(model => model.Title)
+          </th>
+          <th>
+            @Html.DisplayNameFor(model => model.Description)
+          </th>
+          <th>
+            @Html.DisplayNameFor(model => model.Created)
+          </th>
+          <th>
+            @Html.DisplayNameFor(model => model.Updated)
+          </th>
+          <th>
+            Parent Project
+          </th>
+          <th>
+            Ticket Type
+          </th>
+          <th>
+            Ticket Priority
+          </th>
+          <th>
+            Ticket Status
+          </th>
+          <th>
+            Submitted By
+          </th>
+          <th>
+            Assigned Developer
+          </th>
+          <th>
+            Actions
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach (var item in Model)
+        {
+          <tr>
+            <td>
+              @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Updated)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Project.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.TicketType.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+            </td>
+            <td>
+              @if (await AccessService.CanAccessTicket(userId, item.Id, roleName))
+              {
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark border">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark border">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-dark border">Delete</a>
+                @*<a data-toggle="modal" data-target="#@item.Id" class="btn btn-dark border">Delete</a>*@
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+    @*<div class="modal fade" id="@item.Id" tabindex="-1">
+      <div class="modal-dialog modal-xl">
+        <div class="modal-content bg-dark">
+          <div class="modal-header">
+            <h5 class="modal-title text-gray-200">@item.Title</h5>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this ticket?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>*@
+  </div>
+</div>

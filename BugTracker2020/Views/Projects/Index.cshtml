@@ -1,0 +1,88 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BugTracker2020.Services
+@model IEnumerable<BugTracker2020.Models.Project>
+@inject UserManager<BTUser> UserManager
+@inject IBTProjectsService ProjectsService
+@inject IBTAccessService AccessService
+
+@{
+  ViewData["Title"] = "Projects Index";
+  var userId = UserManager.GetUserId(User);
+  var roleName = (await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User))).FirstOrDefault();
+  //var user = await UserManager.GetUserAsync(User);
+  //var roleName2 = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
+  //string userId2 = user.Id;
+}
+
+<div class="container pt-3 text-gray-200">
+  <h1 class="text-center border-bottom-light rounded">All Projects</h1>
+  <h4>Also deal with images</h4>
+  <p>And don't forget to breathe!</p>
+
+  <p>
+    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+    {
+      <a asp-action="Create" class="btn btn-dark border mt-2">Create New</a>
+    }
+    <a asp-action="MyProjects" class="btn btn-dark border mt-2">My Projects</a>
+  </p>
+  <table class="table table-bordered table-dark">
+    <thead class="bg-gradient-dark text-gray-200">
+      <tr>
+        <th>
+          Project Name
+        </th>
+        <th>
+          Assigned Users
+        </th>
+        <th>
+          Project Image
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var item in Model)
+      {
+        <tr>
+          <td style="vertical-align: middle;">
+            @Html.DisplayFor(modelItem => item.Name)
+          </td>
+          @{ var usersOnProject = ProjectsService.UsersOnProject(item.Id).Result; }
+          <td style="vertical-align: middle;">
+            @if (usersOnProject.Count != 0)
+            {
+              @foreach (var user in usersOnProject)
+              {
+                <ul class="list-group list-group-flush">
+                  <li class="list-group-item bg-dark">
+                    @*FIGURE OUT HOW TO REMOVE USER PROJECTS WITH A POST METHOD*@
+                    @user.FullName
+                  </li>
+                </ul>
+              }
+            }
+            else
+            {
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item bg-dark">No Users Assigned</li>
+              </ul>
+            }
+          </td>
+          <td style="vertical-align: middle;">
+            ImageModal
+          </td>
+          <td style="vertical-align: middle;">
+            @if (await AccessService.CanAccessProject(userId, item.Id, roleName))
+            {
+              <a asp-action="" asp-route-id="@item.Id" class="btn btn-dark border">Add Image (not connected)</a>
+              <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark border">Edit</a>
+              <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark border">Details</a>
+              <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-dark border">Delete</a>
+            }
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,136 @@
+﻿@model BugTracker2020.Models.Ticket
+
+@{
+  ViewData["Title"] = "Details";
+}
+<div class="container text-gray-200 pt-3">
+  <h1 class="text-center border-bottom-light rounded">Details</h1>
+
+  <div class="row">
+    <div class="col">
+      <h4>@Model.Title</h4>
+      <hr />
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Title:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.Title)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Description:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.Description)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Posted On:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.Created)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Last Updated:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.Updated)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Parent Project:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.Project.Name)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Ticket Type:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.TicketType.Name)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Ticket Priority:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.TicketPriority.Name)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Ticket Status:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.TicketStatus.Name)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Submitted By:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.OwnerUser.FullName)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Assigned Developer:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @Html.DisplayFor(model => model.DeveloperUser.FullName)
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <div class="col-md-3 py-2">
+          <strong>Attachments:</strong>
+        </div>
+        <div class="col-md-9 py-2">
+          @foreach (var attachment in Model.Attachments)
+          {
+            <a data-toggle="modal" data-target="#@attachment.Description" class="btn btn-dark border">@attachment.Description</a>
+            <div class="modal fade" id="@attachment.Description" tabindex="-1">
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content bg-dark">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-gray-200">@attachment.Description</h5>
+                  </div>
+                  <div class="modal-body">
+                    <img src="@attachment.FilePath" alt="@attachment.Description" />
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+      <hr>
+    </div>
+  </div>
+  <div>
+    <a class="btn btn-dark border" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <a class="btn btn-dark border" asp-action="Index">Back to List</a>
+  </div>
+</div>

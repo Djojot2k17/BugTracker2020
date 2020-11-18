@@ -46,12 +46,13 @@ namespace BugTracker2020.Controllers
 
       List<ManageUserRolesViewModel> model = new List<ManageUserRolesViewModel>();
       List<BTUser> users = _context.Users.ToList();
-      
-      foreach(var user in users)
+
+      foreach (var user in users)
       {
         ManageUserRolesViewModel vm = new ManageUserRolesViewModel();
         vm.User = user;
         var selected = await _BTRoles.ListUserRoles(user);
+        // Figure out how to limit the selectList
         vm.Roles = new SelectList(_context.Roles, "Name", "Name", selected);
         vm.UserRole = await _BTRoles.ListUserRoles(user);
         model.Add(vm);

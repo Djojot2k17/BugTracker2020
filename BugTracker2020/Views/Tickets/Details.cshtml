@@ -1,136 +1,154 @@
-﻿@model BugTracker2020.Models.Ticket
-
+﻿@using Microsoft.AspNetCore.Identity
+@model BugTracker2020.Models.ViewModels.TicketDetailsViewModel
+@inject UserManager<BTUser> userManager
 @{
   ViewData["Title"] = "Details";
 }
 <div class="container text-gray-200 pt-3">
-  <h1 class="text-center border-bottom-light rounded">Details</h1>
-
+  <h1 class="text-center border-bottom-light rounded mb-3">Details</h1>
   <div class="row">
-    <div class="col">
-      <h4>@Model.Title</h4>
-      <hr />
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Title:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.Title)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Description:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.Description)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Posted On:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.Created)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Last Updated:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.Updated)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Parent Project:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.Project.Name)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Ticket Type:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.TicketType.Name)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Ticket Priority:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.TicketPriority.Name)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Ticket Status:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.TicketStatus.Name)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Submitted By:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.OwnerUser.FullName)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Assigned Developer:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @Html.DisplayFor(model => model.DeveloperUser.FullName)
-        </div>
-      </div>
-      <hr>
-      <div class="row">
-        <div class="col-md-3 py-2">
-          <strong>Attachments:</strong>
-        </div>
-        <div class="col-md-9 py-2">
-          @foreach (var attachment in Model.Attachments)
-          {
-            <a data-toggle="modal" data-target="#@attachment.Description" class="btn btn-dark border">@attachment.Description</a>
-            <div class="modal fade" id="@attachment.Description" tabindex="-1">
-              <div class="modal-dialog modal-xl">
-                <div class="modal-content bg-dark">
-                  <div class="modal-header">
-                    <h5 class="modal-title text-gray-200">@attachment.Description</h5>
-                  </div>
-                  <div class="modal-body">
-                    <img src="@attachment.FilePath" alt="@attachment.Description" />
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </div>
-                </div>
-              </div>
+    <div class="col-md-8">
+      <div class="card text-white bg-dark border">
+        <div class="card-header bg-dark">
+          <div class="row">
+            <div class="col-lg-6 col-md-12">
+              <h5 class="card-title pt-2">@Model.Ticket.Title</h5>
             </div>
-          }
+            <div class="col-lg-6 col-md-12 d-flex justify-content-lg-end">
+              <a class="btn btn-dark border pt-2 mr-2" asp-action="Edit" asp-route-id="@Model.Ticket.Id">Edit</a>
+              <a class="btn btn-dark pt-2 border" asp-action="Index">Back to List</a>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="card-text">@Model.Ticket.Description</p>
+        </div>
+        <div class="card-footer bg-dark">
+          <div class="row">
+            <div class="col">Created: @Model.Ticket.Created</div>
+            <div class="col">Last Updated: @Model.Ticket.Updated</div>
+          </div>
         </div>
       </div>
-      <hr>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-white bg-dark border">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-5 py-2">
+              <strong>Parent Project:</strong>
+            </div>
+            <div class="col-md-7 py-2">
+              @Html.DisplayFor(model => model.Ticket.Project.Name)
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-5 py-2">
+              <strong>Ticket Type:</strong>
+            </div>
+            <div class="col-md-7 py-2">
+              @Html.DisplayFor(model => model.Ticket.TicketType.Name)
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-5 py-2">
+              <strong>Ticket Priority:</strong>
+            </div>
+            <div class="col-md-7 py-2">
+              @Html.DisplayFor(model => model.Ticket.TicketPriority.Name)
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-5 py-2">
+              <strong>Ticket Status:</strong>
+            </div>
+            <div class="col-md-7 py-2">
+              @Html.DisplayFor(model => model.Ticket.TicketStatus.Name)
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-5 py-2">
+              <strong>Submitted By:</strong>
+            </div>
+            <div class="col-md-7 py-2">
+              @Html.DisplayFor(model => model.Ticket.OwnerUser.FullName)
+            </div>
+          </div>
+          <hr>
+          <div class="row">
+            <div class="col-md-5 py-2">
+              <strong>Assigned Developer:</strong>
+            </div>
+            <div class="col-md-7 py-2">
+              @Html.DisplayFor(model => model.Ticket.DeveloperUser.FullName)
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div>
-    <a class="btn btn-dark border" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    <a class="btn btn-dark border" asp-action="Index">Back to List</a>
+  <hr>
+  <div class="row">
+    <div class="col-md-2 pt-3">
+      <strong>Attachments:</strong>
+    </div>
+    <div class="col-md-10 py-2">
+      @foreach (var attachment in Model.Ticket.Attachments)
+      {
+        <a data-toggle="modal" data-target="#@attachment.Description" class="btn btn-dark">@attachment.Description</a>
+        <div class="modal fade" id="@attachment.Description" tabindex="-1">
+          <div class="modal-dialog modal-xl">
+            <div class="modal-content bg-dark">
+              <div class="modal-header">
+                <h5 class="modal-title text-gray-200">@attachment.Description</h5>
+              </div>
+              <div class="modal-body">
+                <img src="@attachment.FilePath" alt="@attachment.Description" class="img-fluid" />
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+  <hr />
+  @{ var userId = userManager.GetUserId(User); }
+  <div class="row">
+    <div class="col">
+      <form asp-action="Create" asp-controller="TicketComments">
+        @Html.Hidden("TicketId", Model.Ticket.Id)
+        @Html.Hidden("UserId", userId)
+        <div class="form-group">
+          <label asp-for="@Model.Comment">Add a comment</label>
+          <textarea class="form-control" asp-for="@Model.Comment" rows="3"></textarea>
+        </div>
+        <input type="submit" class="btn btn-dark border" value="Submit">
+      </form>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col">
+      <h4>Comments</h4>
+      @foreach (var comment in Model.Ticket.Comments)
+      {
+        <div class="card bg-dark text-white border mb-2">
+          <div class="card-header bg-dark d-flex justify-content-between">
+            <div><strong>@comment.User.FullName</strong></div>
+            <div class="text-muted">@comment.Created</div>
+          </div>
+          <div class="card-body">
+            <p>@comment.Comment</p>
+          </div>
+        </div>
+      }
+    </div>
   </div>
 </div>

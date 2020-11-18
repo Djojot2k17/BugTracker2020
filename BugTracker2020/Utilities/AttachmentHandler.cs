@@ -11,7 +11,7 @@ namespace BugTracker2020.Utilities
 {
   public class AttachmentHandler
   {
-    public TicketAttachment Attach(IFormFile attachment)
+    public TicketAttachment Attach(IFormFile attachment, int ticketId)
     {
       TicketAttachment ticketAttachment = new TicketAttachment();
       var memoryStream = new MemoryStream();
@@ -21,10 +21,10 @@ namespace BugTracker2020.Utilities
       memoryStream.Dispose();
       var binary = Convert.ToBase64String(bytes);
       var ext = Path.GetExtension(attachment.FileName);
-
+      ticketAttachment.TicketId = ticketId;
       ticketAttachment.FilePath = $"data:image/{ext};base64,{binary}";
       ticketAttachment.FileData = bytes;
-      ticketAttachment.Description = Path.GetFileNameWithoutExtension(attachment.FileName);
+      ticketAttachment.Description = Path.GetFileNameWithoutExtension(attachment.FileName.Replace(" ", "_"));
       ticketAttachment.Created = DateTime.Now;
       return ticketAttachment;
     }

@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Http;
 using BugTracker2020.Utilities;
 using BugTracker2020.Services;
+using BugTracker2020.Models.ViewModels;
 
 namespace BugTracker2020.Controllers
 {
@@ -34,7 +35,7 @@ namespace BugTracker2020.Controllers
     // GET: Tickets
     public async Task<IActionResult> Index()
     {
-      var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType);
+      var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType).Include(t=>t.Attachments);
       return View(await applicationDbContext.ToListAsync());
     }
 
@@ -116,7 +117,7 @@ namespace BugTracker2020.Controllers
       {
         return NotFound();
       }
-
+      var vm = new TicketDetailsViewModel();
       var ticket = await _context.Tickets
           .Include(t => t.DeveloperUser)
           .Include(t => t.OwnerUser)
@@ -125,13 +126,15 @@ namespace BugTracker2020.Controllers
           .Include(t => t.TicketStatus)
           .Include(t => t.TicketType)
           .Include(t => t.Attachments)
+          .Include(t => t.Comments)
           .FirstOrDefaultAsync(m => m.Id == id);
       if (ticket == null)
       {
         return NotFound();
       }
+      vm.Ticket = ticket;
 
-      return View(ticket);
+      return View(vm);
     }
 
     // GET: Tickets/Create
@@ -165,7 +168,7 @@ namespace BugTracker2020.Controllers
           foreach (var attachment in attachments)
           {
             AttachmentHandler attachmentHandler = new AttachmentHandler();
-            ticket.Attachments.Add(attachmentHandler.Attach(attachment));
+            ticket.Attachments.Add(attachmentHandler.Attach(attachment, ticket.Id));
           }
         }
         _context.Add(ticket);
@@ -223,11 +226,6 @@ namespace BugTracker2020.Controllers
       }
       // Get snapshot of old ticket
       Ticket oldTicket = await _context.Tickets
-        .Include(t=>t.TicketPriorityId)
-        .Include(t=>t.TicketStatusId)
-        .Include(t=>t.TicketTypeId)
-        .Include(t=>t.DeveloperUserId)
-        .Include(t=>t.Project)
         .AsNoTracking()
         .FirstOrDefaultAsync(t => t.Id == ticket.Id);
 
@@ -253,11 +251,6 @@ namespace BugTracker2020.Controllers
         }
         // Get snapshot of new ticket
         Ticket newTicket = await _context.Tickets
-          .Include(t => t.TicketPriorityId)
-          .Include(t => t.TicketStatusId)
-          .Include(t => t.TicketTypeId)
-          .Include(t => t.DeveloperUserId)
-          .Include(t => t.Project)
           .AsNoTracking()
           .FirstOrDefaultAsync(t => t.Id == ticket.Id);
         // Get Current UserId

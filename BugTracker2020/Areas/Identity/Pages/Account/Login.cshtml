@@ -10,7 +10,7 @@
   <div class="col">
     <section id="login-form" class="mx-auto">
       <form id="account" method="post">
-      <h1 class="text-center">ClockWork <i class="fas fa-clock"></i></h1>
+        <h1 class="text-center">ClockWork <i class="fas fa-clock"></i></h1>
         <h4 class="text-center">Use a local account to log in.</h4>
         <hr />
         <div asp-validation-summary="All" class="text-danger"></div>
@@ -44,6 +44,25 @@
           </p>
         </div>
       </form>
+      <div class="w-50 mx-auto d-flex justify-content-around mt-3">
+
+          <form method="post">
+            <button type="submit" name="demoEmail" value="DemoAdminEmail" class="btn btn-dark border">Demo Admin</button>
+          </form>
+          <form method="post">
+            <button type="submit" name="demoEmail" value="DemoPMEmail" class="btn btn-dark border">Demo PM</button>
+          </form>
+          <form method="post">
+            <button type="submit" name="demoEmail" value="DemoDevEmail" class="btn btn-dark border">Demo Dev</button>
+          </form>
+          <form method="post">
+            <button type="submit" name="demoEmail" value="DemoSubEmail" class="btn btn-dark border">Demo Sub</button>
+          </form>
+          <form method="post">
+            <button type="submit" name="demoEmail" value="DemoNewUser" class="btn btn-dark border">Demo New</button>
+          </form>
+
+      </div>
     </section>
   </div>
 </div>

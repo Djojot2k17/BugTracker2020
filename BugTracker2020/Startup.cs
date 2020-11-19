@@ -1,6 +1,7 @@
 using BugTracker2020.Data;
 using BugTracker2020.Models;
 using BugTracker2020.Services;
+using BugTracker2020.Utilities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -24,9 +25,15 @@ namespace BugTracker2020
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
+      //services.AddDbContext<ApplicationDbContext>(options =>
+      //    options.UseSqlServer(
+      //        Configuration.GetConnectionString("DefaultConnection")));
+
+      // This adds a service that allows us to communicate with the DB
+      // The connection string will either come from appsettings or from heroku
       services.AddDbContext<ApplicationDbContext>(options =>
-          options.UseSqlServer(
-              Configuration.GetConnectionString("DefaultConnection")));
+        options.UseNpgsql(
+          DataHelper.GetConnectionString(Configuration)));
 
       services.AddIdentity<BTUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
           .AddEntityFrameworkStores<ApplicationDbContext>()

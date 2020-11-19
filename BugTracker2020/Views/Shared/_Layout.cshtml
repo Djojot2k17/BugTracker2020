@@ -370,10 +370,16 @@
   <script src="~/vendor/chart.js/Chart.js"></script>
   <script src="~/js/site.js" asp-append-version="true"></script>
   <script>
-    //$(document).ready(function () {
-    //  $('.table').datatable();
-    //});
+      //$(document).ready(function () {
+      //  $('.table').datatable();
+      //});
   </script>
+  @if (TempData["DemoLockout"] != null)
+  {
+    <script>
+      $('#demoRoleWarning').addClass('d-block');
+    </script>
+  }
   @RenderSection("Scripts", required: false)
 </body>
 </html>

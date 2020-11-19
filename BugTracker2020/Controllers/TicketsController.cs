@@ -35,7 +35,7 @@ namespace BugTracker2020.Controllers
     // GET: Tickets
     public async Task<IActionResult> Index()
     {
-      var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType).Include(t=>t.Attachments);
+      var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType).Include(t => t.Attachments);
       return View(await applicationDbContext.ToListAsync());
     }
 
@@ -160,20 +160,30 @@ namespace BugTracker2020.Controllers
     {
       if (ModelState.IsValid)
       {
-        // Add file handler
-        ticket.OwnerUserId = _userManager.GetUserId(User);
-        ticket.Created = DateTime.Now;
-        if (attachments != null)
+        // IF not demo user
+        if (!User.IsInRole("Demo"))
         {
-          foreach (var attachment in attachments)
+          // Add file handler
+          ticket.OwnerUserId = _userManager.GetUserId(User);
+          ticket.Created = DateTime.Now;
+          if (attachments != null)
           {
-            AttachmentHandler attachmentHandler = new AttachmentHandler();
-            ticket.Attachments.Add(attachmentHandler.Attach(attachment, ticket.Id));
+            foreach (var attachment in attachments)
+            {
+              AttachmentHandler attachmentHandler = new AttachmentHandler();
+              ticket.Attachments.Add(attachmentHandler.Attach(attachment, ticket.Id));
+            }
           }
+          _context.Add(ticket);
+          await _context.SaveChangesAsync();
+          return RedirectToAction(nameof(Index));
+        } else
+        {
+          // Handle tempdata["DemoLockout"]
+          TempData["DemoLockout"] = "Your changes have not been saved. You must be logged in as a full user.";
+          //Handle redirect to index
+          return RedirectToAction(nameof(Index));
         }
-        _context.Add(ticket);
-        await _context.SaveChangesAsync();
-        return RedirectToAction(nameof(Index));
       }
       ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.DeveloperUserId);
       ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
@@ -196,18 +206,18 @@ namespace BugTracker2020.Controllers
       // If you have access to a ticket
       if (await _accessService.CanAccessTicket(userId, (int)id, roleName))
       {
-      var ticket = await _context.Tickets.FindAsync(id);
-      if (ticket == null)
-      {
-        return NotFound();
-      }
-      ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
-      //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
-      //ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
-      ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
-      ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
-      ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
-      return View(ticket);
+        var ticket = await _context.Tickets.FindAsync(id);
+        if (ticket == null)
+        {
+          return NotFound();
+        }
+        ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
+        //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
+        //ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
+        ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
+        ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name", ticket.TicketStatusId);
+        ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name", ticket.TicketTypeId);
+        return View(ticket);
       }
       TempData["Naughty"] = "You've been a baaad baaaad boy...";
       return RedirectToAction("Index");

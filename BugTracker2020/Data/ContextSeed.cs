@@ -14,7 +14,8 @@ namespace BugTracker2020.Data
     ProjectManager,
     Developer,
     Submitter,
-    NewUser
+    NewUser,
+    Demo
   }
   public static class ContextSeed
   {
@@ -26,6 +27,8 @@ namespace BugTracker2020.Data
       await roleManager.CreateAsync(new IdentityRole(Roles.Developer.ToString()));
       await roleManager.CreateAsync(new IdentityRole(Roles.Submitter.ToString()));
       await roleManager.CreateAsync(new IdentityRole(Roles.NewUser.ToString()));
+      await roleManager.CreateAsync(new IdentityRole(Roles.Demo.ToString()));
+
     }
 
     // Seed Users
@@ -179,6 +182,177 @@ namespace BugTracker2020.Data
           //userManager.CreateAsync(userObject, password)
           await userManager.CreateAsync(newUser, "Abc123!@#");
           await userManager.AddToRoleAsync(newUser, Roles.NewUser.ToString());
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("********** ERROR *********");
+        Debug.WriteLine("Error Seeding Default NewUser User");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("***************************");
+        throw;
+      }
+      #endregion
+
+      #region Demo AdminUser
+      //Create our userObject
+      var demoAdmin = new BTUser
+      {
+        Email = "demoAdmin@mailinator.com",
+        UserName = "demoAdmin@mailinator.com",
+        FirstName = "Demo",
+        LastName = "Admin",
+        EmailConfirmed = true,
+        PhoneNumberConfirmed = true
+      };
+
+      try
+      {
+        var user = await userManager.FindByEmailAsync(demoAdmin.Email);
+        if (user == null)
+        {
+          //userManager.CreateAsync(userObject, password)
+          await userManager.CreateAsync(demoAdmin, "Abc123!@#");
+          await userManager.AddToRoleAsync(demoAdmin, Roles.Admin.ToString());
+          await userManager.AddToRoleAsync(demoAdmin, Roles.Demo.ToString());
+
+        }
+
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("********** ERROR *********");
+        Debug.WriteLine("Error Seeding Default Admin User");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("***************************");
+        throw;
+      }
+      #endregion
+
+      #region DemoProjectManagerUser
+      //Create our userObject
+      var demoPm = new BTUser
+      {
+        Email = "demoPm@mailinator.com",
+        UserName = "demoPm@mailinator.com",
+        FirstName = "Demo",
+        LastName = "PM",
+        EmailConfirmed = true,
+        PhoneNumberConfirmed = true
+      };
+
+      try
+      {
+        var user = await userManager.FindByEmailAsync(demoPm.Email);
+        if (user == null)
+        {
+          //userManager.CreateAsync(userObject, password)
+          await userManager.CreateAsync(demoPm, "Abc123!@#");
+          await userManager.AddToRoleAsync(demoPm, Roles.ProjectManager.ToString());
+          await userManager.AddToRoleAsync(demoPm, Roles.Demo.ToString());
+
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("********** ERROR *********");
+        Debug.WriteLine("Error Seeding Default PM User");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("***************************");
+        throw;
+      }
+      #endregion
+
+      #region DemoDeveloperUser
+      //Create our userObject
+      var demoDeveloper = new BTUser
+      {
+        Email = "demoDev@mailinator.com",
+        UserName = "demoDev@mailinator.com",
+        FirstName = "Demo",
+        LastName = "Dev",
+        EmailConfirmed = true,
+        PhoneNumberConfirmed = true
+      };
+
+      try
+      {
+        var user = await userManager.FindByEmailAsync(demoDeveloper.Email);
+        if (user == null)
+        {
+          //userManager.CreateAsync(userObject, password)
+          await userManager.CreateAsync(demoDeveloper, "Abc123!@#");
+          await userManager.AddToRoleAsync(demoDeveloper, Roles.Developer.ToString());
+          await userManager.AddToRoleAsync(demoDeveloper, Roles.Demo.ToString());
+
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("********** ERROR *********");
+        Debug.WriteLine("Error Seeding Default Dev User");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("***************************");
+        throw;
+      }
+      #endregion
+
+      #region DemoSubmitter
+      //Create our userObject
+      var demoSubmitter = new BTUser
+      {
+        Email = "demoSub@mailinator.com",
+        UserName = "demoSub@mailinator.com",
+        FirstName = "Demo",
+        LastName = "Submitter",
+        EmailConfirmed = true,
+        PhoneNumberConfirmed = true
+      };
+
+      try
+      {
+        var user = await userManager.FindByEmailAsync(demoSubmitter.Email);
+        if (user == null)
+        {
+          //userManager.CreateAsync(userObject, password)
+          await userManager.CreateAsync(demoSubmitter, "Abc123!@#");
+          await userManager.AddToRoleAsync(demoSubmitter, Roles.Submitter.ToString());
+          await userManager.AddToRoleAsync(demoSubmitter, Roles.Demo.ToString());
+
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("********** ERROR *********");
+        Debug.WriteLine("Error Seeding Default Submitter User");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("***************************");
+        throw;
+      }
+      #endregion
+
+      #region DemoNewUser
+      //Create our userObject
+      var demoNewUser = new BTUser
+      {
+        Email = "demoNoobie@mailinator.com",
+        UserName = "demoNoobie@mailinator.com",
+        FirstName = "Demo",
+        LastName = "Noob",
+        EmailConfirmed = true,
+        PhoneNumberConfirmed = true
+      };
+
+      try
+      {
+        var user = await userManager.FindByEmailAsync(demoNewUser.Email);
+        if (user == null)
+        {
+          //userManager.CreateAsync(userObject, password)
+          await userManager.CreateAsync(demoNewUser, "Abc123!@#");
+          await userManager.AddToRoleAsync(demoNewUser, Roles.NewUser.ToString());
+          await userManager.AddToRoleAsync(demoNewUser, Roles.Demo.ToString());
+
         }
       }
       catch (Exception ex)

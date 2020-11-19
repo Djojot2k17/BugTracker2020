@@ -13,6 +13,12 @@
   //string userId2 = user.Id;
 }
 <div class="pt-3 px-3">
+  <div class="alert alert-warning alert-dismissible show d-none fade" id="demoRoleWarning" role="alert">
+    <strong>Holy smokes!</strong> You're not logged in with a role that can make changes.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
   <h1 class="text-center border-bottom-light rounded text-gray-200">All Tickets</h1>
   <div class="table-responsive-xxl">
     @if (TempData["Naughty"] != null)
@@ -40,8 +46,8 @@
             @Html.DisplayNameFor(model => model.Updated)
           </th>
           @*<th>
-            Attachments
-          </th>*@
+              Attachments
+            </th>*@
           <th>
             Parent Project
           </th>
@@ -82,7 +88,7 @@
               @Html.DisplayFor(modelItem => item.Updated)
             </td>
             @*<td style="vertical-align:middle;">*@
-              @*@if (item.Attachments.Count > 0)
+            @*@if (item.Attachments.Count > 0)
               {
                 <button class="btn btn-dark border" type="button" data-toggle="collapse" data-target="#attachment-@item.Id" aria-expanded="false" aria-controls="attachments">
                   Show Attachments
@@ -142,23 +148,23 @@
             </td>
           </tr>
           @*<div class="modal fade" id="@dataTarget" tabindex="-1">
-            <div class="modal-dialog modal-xl">
-              <div class="modal-content bg-dark">
-                <div class="modal-header">
-                  <h5 class="modal-title text-gray-200">Atttach File to @item.Title ticket</h5>
-                </div>
-                <div class="modal-body">
-                  <form asp-action="ProcessAttachment" asp-controller="TicketAttachments" enctype="multipart/form-data">
-                    <input type="hidden" name="ticketId" value="@item.Id">
-                    <label>Attachment: </label>
-                    <input type="file" name="file">
-                    <input type="submit" class="btn btn-dark border" value="Add Attachment">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  </form>
+              <div class="modal-dialog modal-xl">
+                <div class="modal-content bg-dark">
+                  <div class="modal-header">
+                    <h5 class="modal-title text-gray-200">Atttach File to @item.Title ticket</h5>
+                  </div>
+                  <div class="modal-body">
+                    <form asp-action="ProcessAttachment" asp-controller="TicketAttachments" enctype="multipart/form-data">
+                      <input type="hidden" name="ticketId" value="@item.Id">
+                      <label>Attachment: </label>
+                      <input type="file" name="file">
+                      <input type="submit" class="btn btn-dark border" value="Add Attachment">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </form>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>*@
+            </div>*@
         }
       </tbody>
     </table>

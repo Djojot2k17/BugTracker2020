@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BugTracker2020.Data;
 using BugTracker2020.Models;
+using BugTracker2020.Utilities;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -19,26 +20,26 @@ namespace BugTracker2020
     {
       //CreateHostBuilder(args).Build().Run();
       var host = CreateHostBuilder(args).Build();
-
-      using (var scope = host.Services.CreateScope())
-      {
-        var services = scope.ServiceProvider;
-        var loggerFactory = services.GetRequiredService<ILoggerFactory>();
-        try
-        {
-          var context = services.GetRequiredService<ApplicationDbContext>();
-          var userManager = services.GetRequiredService<UserManager<BTUser>>();
-          var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-          await ContextSeed.SeedRolesAsync(roleManager);
-          await ContextSeed.SeedDefaultUsersAsync(userManager);
-          await ContextSeed.SeedDefaultTicketPropsAsync(context);
-        }
-        catch (Exception ex)
-        {
-          var logger = loggerFactory.CreateLogger<Program>();
-          logger.LogError(ex, "An error ocurred seeding the Database.");
-        }
-      }
+      await DataHelper.ManageData(host);
+      //using (var scope = host.services.createscope())
+      //{
+      //  var services = scope.serviceprovider;
+      //  var loggerfactory = services.getrequiredservice<iloggerfactory>();
+      //  try
+      //  {
+      //    var context = services.getrequiredservice<applicationdbcontext>();
+      //    var usermanager = services.getrequiredservice<usermanager<btuser>>();
+      //    var rolemanager = services.getrequiredservice<rolemanager<identityrole>>();
+      //    await contextseed.seedrolesasync(rolemanager);
+      //    await contextseed.seeddefaultusersasync(usermanager);
+      //    await contextseed.seeddefaultticketpropsasync(context);
+      //  }
+      //  catch (exception ex)
+      //  {
+      //    var logger = loggerfactory.createlogger<program>();
+      //    logger.logerror(ex, "an error ocurred seeding the database.");
+      //  }
+      //}
       host.Run();
     }
 
@@ -46,6 +47,8 @@ namespace BugTracker2020
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder =>
             {
+              webBuilder.CaptureStartupErrors(true);
+              webBuilder.UseSetting(WebHostDefaults.DetailedErrorsKey, "true");
               webBuilder.UseStartup<Startup>();
             });
   }

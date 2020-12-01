@@ -31,7 +31,7 @@ namespace BugTracker2020.Controllers
     // GET: ManageUserRoles
     public async Task<IActionResult> SetRoles()
     {
-
+      TempData["InSetRolesPage"] = true;
       //List<ManageUserRolesViewModel> model = new List<ManageUserRolesViewModel>();
       //List<BTUser> users = _context.Users.ToList();
 
@@ -50,12 +50,16 @@ namespace BugTracker2020.Controllers
       foreach (var user in users)
       {
         ManageUserRolesViewModel vm = new ManageUserRolesViewModel();
-        vm.User = user;
-        var selected = await _BTRoles.ListUserRoles(user);
-        // Figure out how to limit the selectList
-        vm.Roles = new SelectList(_context.Roles, "Name", "Name", selected);
-        vm.UserRole = await _BTRoles.ListUserRoles(user);
-        model.Add(vm);
+        if (!await _BTRoles.IsUserInRole(user, "Demo"))
+        {
+          vm.UserId = user.Id;
+          vm.UserName = user.FullName;
+          var selected = await _BTRoles.ListUserRoles(user);
+          // Figure out how to limit the selectList
+          vm.Roles = new SelectList(_context.Roles, "Name", "Name", selected);
+          vm.UserRole = await _BTRoles.ListUserRoles(user);
+          model.Add(vm);
+        }
       }
 
       return View(model);
@@ -64,13 +68,13 @@ namespace BugTracker2020.Controllers
     // POST: SetRoles
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> SetRoles(ManageUserRolesViewModel item)
+    public async Task<IActionResult> SetRoles(ManageUserRolesViewModel item, string name)
     {
-      BTUser user = _context.Users.Find(item.User.Id);
+      BTUser user = _context.Users.Find(item.UserId);
 
       IEnumerable<string> roles = await _BTRoles.ListUserRoles(user);
       await _userManager.RemoveFromRolesAsync(user, roles);
-      string userRole = item.SelectedRole;
+      string userRole = name;
 
       if (Enum.TryParse(userRole, out Roles roleValue))
       {

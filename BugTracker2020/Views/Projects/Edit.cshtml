@@ -4,41 +4,34 @@
     ViewData["Title"] = "Edit";
 }
 
-<div class="container pt-3">
-  <h1 class="text-center border-bottom-light rounded text-gray-200">Edit</h1>
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <h1>Edit</h1>
 
-  <h4 class="text-gray-200">@Model.Name</h4>
-  <hr />
-  <div class="row">
-    <div class="col-md-4">
-      <form asp-action="Edit">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <input type="hidden" asp-for="Id" />
-        <div class="form-group">
-          <label asp-for="Name" class="control-label text-gray-200"></label>
-          <input asp-for="Name" class="form-control" />
-          <span asp-validation-for="Name" class="text-danger"></span>
-        </div>
-        @*ADD IMAGE HANDLER*@
-        <div class="form-group">
-          <label asp-for="ImagePath" class="control-label text-gray-200"></label>
-          <input asp-for="ImagePath" class="form-control" />
-          <span asp-validation-for="ImagePath" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-          <label asp-for="ImageData" class="control-label text-gray-200"></label>
-          <input asp-for="ImageData" class="form-control" />
-          <span asp-validation-for="ImageData" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-          <input type="submit" value="Save" class="btn btn-dark border" />
-          <a asp-action="Index" class="btn btn-dark border">Back to List</a>
-        </div>
-      </form>
+  <div class="card bg-dark-o-10 p-3 shadow-lg border border-2 border-light">
+    <div class="card-header bg-transparent border-0">
+      <div class="card-title">
+        <h4 class="text-center">@Model.Name</h4>
+      </div>
+      <div class="card-body bg-transparent">
+        <form asp-action="Edit" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="projectName" class="control-label text-white">Project Name</label>
+            <input name="projectName" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="text-white">Upload Project Image</label>
+            <div></div>
+            <div class="custom-file">
+              <input type="file" name="projectImage" class="custom-file-input" id="customFile" />
+              <label class="custom-file-label" for="customFile">Choose file</label>
+            </div>
+          </div>
+          <div class="form-group d-flex justify-content-end">
+            <input type="submit" value="Confirm" class="btn btn-outline-primary mr-2" />
+            <a asp-action="Index" class="btn btn-dark border">Back to Projects</a>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-  @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-  }
-
 </div>

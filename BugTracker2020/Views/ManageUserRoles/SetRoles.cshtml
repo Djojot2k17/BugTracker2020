@@ -1,71 +1,43 @@
 ﻿@model IEnumerable<BugTracker2020.Models.ViewModels.ManageUserRolesViewModel>
 
-<div class="container">
-  <div class="row px-3 pt-3">
-    <!-- Users -->
-    <div class="col-12">
-      <div class="card bg-dark shadow-lg mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between bg-dark">
-          <h6 class="m-0 font-weight-bold text-gray-200">
-            Set User Roles
-          </h6>
-          <div class="dropdown no-arrow">
-            <a class="dropdown-toggle"
-               href="#"
-               role="button"
-               id="dropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                 aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Dropdown Header:</div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </div>
-        </div>
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="card-text">
-            <table class="table table-sm table-dark mt-3">
-              <thead class="bg-gradient-dark text-gray-200">
-                <tr>
-                  <th class="pl-3">User</th>
-                  <th class="pl-3">Current Role</th>
-                  <th class="pl-3">Role</th>
-                  <th class="pl-3">Action</th>
-                </tr>
-              </thead>
-              @*SET USER ROLES FORMS HERE*@
-              @foreach (var item in Model)
-              {
-              <form asp-controller="ManageUserRoles" asp-action="SetRoles">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <input type="hidden" asp-for="@item.User.Id" />
-                <tr style="height: 60px;">
-                  <td style="vertical-align: middle;  padding-left: 1.1rem;">@item.User.FullName</td>
-                  <td style="vertical-align: middle;  padding-left: 1.1rem;">@item.UserRole.FirstOrDefault()</td>
-                  <td class="px-2" style="vertical-align: middle;">
-                    <select class="form-control bg-dark text-gray-200" asp-for="@item.SelectedRole" asp-items="@item.Roles">
-                      <option value="">Choose a role</option>
-                    </select>
-                  </td>
-                  <td class="text-center" style="vertical-align: middle;">
-                    <input type="submit" class="btn btn-dark border" value="Set Role">
-                  </td>
-                </tr>
-              </form>
-              }
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <h5 class="my-5">
+    Select a Role from the dropdown to change a user's current role.
+  </h5>
+  <p class="pb-3">Warning: This will affect what the user can see.</p>
+  <div class="bg-dark-o-80 p-3 shadow-lg border border-dark border-2 rounded">
+    <table class="table text-center shadow bg-white-o-20">
+      <thead class="bg-dark">
+        <tr>
+          <th>User</th>
+          <th>Current Role</th>
+          <th>Role</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        @*SET USER ROLES FORMS HERE*@
+        @foreach (var item in Model)
+        {
+          var userName = item.UserName.Replace(" ", "_");
+          <tr style="height: 60px;">
+            <form asp-controller="ManageUserRoles" asp-action="SetRoles">
+              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+              <input type="hidden" asp-for="@item.UserId">
+              <td style="vertical-align: middle;  padding-left: 1.1rem;">@item.UserName</td>
+              <td style="vertical-align: middle;  padding-left: 1.1rem;">@item.UserRole.FirstOrDefault()</td>
+              <td class="px-2" style="vertical-align: middle;">
+                <select class="form-control custom-select text-gray-200" id="@userName" name="name" asp-items="@item.Roles">
+                  <option value="">Choose a role</option>
+                </select>
+              </td>
+              <td class="text-center" style="vertical-align: middle;">
+                <input type="submit" class="btn btn-outline-info" value="Set Role" />
+              </td>
+            </form>
+          </tr>
+        }
+      </tbody>
+    </table>
   </div>
 </div>

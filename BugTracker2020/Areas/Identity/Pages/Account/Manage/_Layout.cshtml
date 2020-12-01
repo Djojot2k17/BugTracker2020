@@ -9,21 +9,23 @@
     }
 }
 
-<h2>Manage your account</h2>
 
-<div>
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <h2>Manage your account</h2>
+
+  <div>
     <h4>Change your account settings</h4>
-    <hr />
+    <hr class="bg-white" />
     <div class="row">
-        <div class="col-md-3">
-            <partial name="_ManageNav" />
-        </div>
-        <div class="col-md-9">
-            @RenderBody()
-        </div>
+      <div class="col-md-3">
+        <partial name="_ManageNav" />
+      </div>
+      <div class="col-md-9">
+        @RenderBody()
+      </div>
     </div>
+  </div>
 </div>
-
 @section Scripts {
     @RenderSection("Scripts", required: false)
 }

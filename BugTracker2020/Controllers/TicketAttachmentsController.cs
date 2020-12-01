@@ -60,7 +60,7 @@ namespace BugTracker2020.Controllers
     public async Task<IActionResult> ProcessAttachment(IFormFile file, int ticketId)
     {
       var attachmentHandler = new AttachmentHandler();
-      var ticketAttachment = attachmentHandler.Attach(file, ticketId);
+      var ticketAttachment = attachmentHandler.AttachToTicket(file, ticketId);
       _context.Add(ticketAttachment);
       await _context.SaveChangesAsync();
       return RedirectToAction("Index","Tickets");

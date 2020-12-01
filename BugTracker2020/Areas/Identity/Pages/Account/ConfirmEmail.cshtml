@@ -1,7 +1,13 @@
 ﻿@page
 @model ConfirmEmailModel
 @{
-    ViewData["Title"] = "Confirm email";
+  ViewData["Title"] = "Confirm email";
 }
-
-<h1>@ViewData["Title"]</h1>
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <div class="row">
+    <div class="col-md-6">
+      <h1>Successfully Registered</h1>
+      <a asp-controller="Home" asp-action="Index" class="btn btn-pill btn-primary opacity-90 px-15 py-3 m-2">Please log in.</a>
+    </div>
+  </div>
+</div>

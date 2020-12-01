@@ -3,13 +3,11 @@
 @inject UserManager<BTUser> UserManager
 @inject BugTracker2020.Data.ApplicationDbContext db
 
-@{ 
-  var userId = UserManager.GetUserId(User);
-  var userName = db.Users.Find(userId).FullName;
-}
 
 @if (SignInManager.IsSignedIn(User))
 {
+  var userId = UserManager.GetUserId(User);
+  var userName = db.Users.Find(userId).FullName;
   <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hi @userName!</a>
   <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
     <button type="submit" class="dropdown-item">

@@ -1,0 +1,49 @@
+﻿<!--begin::Header Menu Wrapper**********************************************-->
+<div class="header-menu-wrapper header-menu-wrapper-left"
+     id="kt_header_menu_wrapper">
+  <div class="container">
+    <!--begin::Header Menu-->
+    <div id="kt_header_menu"
+         class="header-menu header-menu-left header-menu-mobile header-menu-layout-default header-menu-root-arrow">
+      <!--begin::Header Nav-->
+      <ul class="menu-nav">
+        <li class="menu-item" id="dashboard">
+          <a asp-controller="Home" asp-action="Index" class="menu-link">
+            <span class="menu-text">Dashboard</span>
+          </a>
+        </li>
+        @if (User.IsInRole("Admin"))
+        {
+          <li class="menu-item" id="userRoles">
+            <a asp-controller="ManageUserRoles" asp-action="SetRoles" class="menu-link">
+              <span class="menu-text">User Roles</span>
+            </a>
+          </li>
+        }
+        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+        {
+          <li class="menu-item" id="userAssignments">
+            <a asp-controller="Projects" asp-action="ManageProjectUsers" class="menu-link">
+              <span class="menu-text">User Assignments</span>
+            </a>
+          </li>
+        }
+        <li class="menu-item" id="projects">
+          <a asp-controller="Projects" asp-action="Index" class="menu-link">
+            <span class="menu-text">Projects</span>
+          </a>
+        </li>
+        <li class="menu-item" id="tickets">
+          <a asp-controller="Tickets" asp-action="Index" class="menu-link">
+            <span class="menu-text">Tickets</span>
+          </a>
+        </li>
+      </ul>
+      <!--end::Header Nav-->
+    </div>
+    <!--end::Header Menu-->
+  </div>
+</div>
+
+
+<!--end::HEADER Menu Wrapper ***********************************************************************************-->

@@ -1,422 +1,271 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Identity
+@inject UserManager<BTUser> UserManager
+@inject BugTracker2020.Data.ApplicationDbContext db
+@{
   ViewData["Title"] = "Dashboard";
+  var userId = UserManager.GetUserId(User);
+  var user = db.Users.Find(userId);
+  var roleName = (await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User))).FirstOrDefault();
 }
 
-<div class="pt-3 px-3">
-  <!-- Begin Page Content -->
-  <!-- Page Heading -->
-  <h3 class="text-gray-400 text-center p-3 mb-4 border-bottom-light rounded">Dashboard</h3>
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
 
-  <!-- Content Row -->
   <div class="row">
-    <!-- Pending Requests Card Example -->
-    <div class="col-6 col-xxl-4 mb-4">
-      <div class="card border-left-warning shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                Todo
-              </div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">
-                Fix UserProjects, add modal to delete tickets, handle visibility
-              </div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-hand-holding fa-2x text-gray-300"></i>
-            </div>
-          </div>
+    <div class="col">
+      <div class="bg-dark p-2 rounded mb-2 d-flex justify-content-between">
+        <div>
+          <h2>Hello @user.FullName</h2>
+          <p>Your current role is @roleName</p>
         </div>
-      </div>
-    </div>
-    <div class="col-6 col-xxl-4 mb-4">
-      <div class="card border-left-warning shadow h-100 py-2">
-        <div class="card-body">
-          <div class="row no-gutters align-items-center">
-            <div class="col mr-2">
-              <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                Pending todos
-              </div>
-              <div class="h5 mb-0 font-weight-bold text-gray-800">
-                Show useful info on this dashboard...Datatables
-              </div>
-            </div>
-            <div class="col-auto">
-              <i class="fas fa-ticket-alt fa-2x text-gray-300"></i>
-            </div>
-          </div>
-        </div>
+        <blockquote class="blockquote">
+          <p class="mb-0" id="quoteText"></p>
+          <footer class="blockquote-footer ml-auto" id="quoteAuthor"></footer>
+        </blockquote>
       </div>
     </div>
   </div>
-
-  <!-- Content Row -->
   <div class="row">
-    <!-- Users -->
-    <div class="col-12 col-xxl-4">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">
-            User Management
-          </h6>
-          <div class="dropdown no-arrow">
-            <a class="dropdown-toggle"
-               href="#"
-               role="button"
-               id="dropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                 aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Dropdown Header:</div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
+    <div class="col-xl-4">
+      <!--begin::Card-->
+      <div class="card bg-dark-o-100 card-custom gutter-b">
+        <div class="card-header mx-auto">
+          <div class="card-title">
+            <h3 class="card-label text-white">Current Tickets by Status</h3>
           </div>
         </div>
-        <!-- Card Body -->
         <div class="card-body">
-          <div class="card-text">
-            <ul class="nav nav-tabs" id="myTab" role="tablist">
-              <li class="nav-item" role="presentation">
-                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">User Roles</a>
-              </li>
-              <li class="nav-item" role="presentation">
-                <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">User Assignments</a>
-              </li>
-            </ul>
-            <div class="tab-content" id="myTabContent">
-              <div class="tab-pane fade show active p-2" id="home" role="tabpanel" aria-labelledby="home-tab">
-                <table class="table table-responsive-sm">
-                  <thead>
-                  <th>User</th>
-                  <th>Role</th>
-                  <th>Action</th>
-                  </thead>
-                  <tbody>
-                    @*SET USER ROLES FORMS HERE*@
-                    <form>
-                  <td>User1</td>
-                  <td>
-                    <select class="form-control">
-                      <option value="value">Role1</option>
-                      <option value="value">Role2</option>
-                      <option value="value">Role3</option>
-                    </select>
-                  </td>
-                  <td>
-                    <input type="submit" class="btn btn-outline-primary" value="Set Role">
-                  </td>
-                  </form>
-                  </tbody>
-                </table>
-              </div>
-              <div class="tab-pane fade p-2" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-                <table class="table table-responsive-md">
-                  <thead>
-                  <th>User</th>
-                  <th>Role</th>
-                  <th>Project</th>
-                  <th>Action</th>
-                  </thead>
-                  <tbody>
-                    @*SET USER ROLES FORMS HERE*@
-                    <form>
-                  <td>User1</td>
-                  <td>AssignedRole</td>
-                  <td>
-                    <select class="form-control">
-                      <option value="value">Project1</option>
-                      <option value="value">Project2</option>
-                      <option value="value">Project3</option>
-                    </select>
-                  </td>
-                  <td>
-                    <input type="submit" class="btn btn-outline-primary" value="Assign User to Project">
-                  </td>
-                  </form>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
+          <div id="statusChart" style="height: 300px;"></div>
+          <div id="statusChartMemo" class="text-center" style="height: 30px; width: 250px;margin: 0 auto;"></div>
         </div>
       </div>
+      <!--end::Card-->
+    </div>
+    <div class="col-xl-4">
+      <!--begin::Card-->
+      <div class="card bg-dark-o-100 card-custom gutter-b">
+        <div class="card-header mx-auto">
+          <div class="card-title">
+            <h3 class="card-label text-white">Current Tickets by Priority</h3>
+          </div>
+        </div>
+        <div class="card-body">
+          <div id="priorityChart" style="height: 300px;"></div>
+          <div id="priorityChartMemo" class="text-center" style="height: 30px; width: 250px;margin: 0 auto;"></div>
+        </div>
+      </div>
+      <!--end::Card-->
     </div>
 
-    <!-- Project Management -->
-    <div class="col-12 col-xxl-4">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">
-            Project Management
-          </h6>
-          <div class="dropdown no-arrow">
-            <a class="dropdown-toggle"
-               href="#"
-               role="button"
-               id="dropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                 aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Dropdown Header:</div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
+    <div class="col-xl-4">
+      <!--begin::Card-->
+      <div class="card bg-dark-o-100 card-custom gutter-b">
+        <div class="card-header mx-auto">
+          <div class="card-title">
+            <h3 class="card-label text-white">Current Tickets by Type</h3>
           </div>
         </div>
-        <!-- Card Body -->
         <div class="card-body">
-          <div class="card-text">
-            <p>
-              <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
-            </p>
-            <table class="table table-responsive-sm">
-              <thead>
-                <tr>
-                  <th>
-                    Project Name
-                  </th>
-                  <th>
-                    Assigned Users
-                  </th>
-                  <th>
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @*@foreach (var item in Model)
-                  {*@
-                <tr>
-                  <td>
-                    Project1
-                  </td>
-                  <td>
-                    <ul class="list-group list-group-flush">
-                      <li class="list-group-item">User1</li>
-                      <li class="list-group-item">User2</li>
-                    </ul>
-                  </td>
-                  <td>
-                    <a asp-action="Edit" class="btn btn-outline-primary btn-block">Edit</a>
-                    <a asp-action="Details" class="btn btn-outline-primary btn-block">Details</a>
-                    <a asp-action="Delete" class="btn btn-outline-primary btn-block">Delete</a>
-                  </td>
-                </tr>
-                @*}*@
-              </tbody>
-            </table>
-          </div>
+          <div id="typeChart" style="height: 300px;"></div>
+          <div id="typeChartMemo" class="text-center" style="height: 30px; width: 250px;margin: 0 auto;"></div>
         </div>
       </div>
-    </div>
-
-    <!-- Ticket Management -->
-    <div class="col-12 col-xxl-4">
-      <div class="card shadow mb-4">
-        <!-- Card Header - Dropdown -->
-        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">
-            Ticket Management
-          </h6>
-          <div class="dropdown no-arrow">
-            <a class="dropdown-toggle"
-               href="#"
-               role="button"
-               id="dropdownMenuLink"
-               data-toggle="dropdown"
-               aria-haspopup="true"
-               aria-expanded="false">
-              <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-            </a>
-            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                 aria-labelledby="dropdownMenuLink">
-              <div class="dropdown-header">Dropdown Header:</div>
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Something else here</a>
-            </div>
-          </div>
-        </div>
-        <!-- Card Body -->
-        <div class="card-body">
-          <div class="card-text">
-            <p>
-              <a asp-action="Create" class="btn btn-outline-primary">Create New</a>
-            </p>
-            <table class="table table-responsive-xl text-center">
-              <thead>
-                <tr>
-                  <th>
-                    Title
-                  </th>
-                  <th>
-                    Created
-                  </th>
-                  <th>
-                    Updated
-                  </th>
-                  <th>
-                    Parent Project
-                  </th>
-                  <th>
-                    Submitted By
-                  </th>
-                  <th>
-                    Assigned Developer
-                  </th>
-                  <th>
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                @*@foreach (var item in Model)
-                  {*@
-                <tr>
-                  <td>
-                    Title
-                  </td>
-                  <td>
-                    @DateTime.Now.ToString("MM/dd/yyyy")
-                  </td>
-                  <td>
-                    @DateTime.Now.ToString("MM/dd/yyyy")
-                  </td>
-                  <td>
-                    Project1
-                  </td>
-                  <td>
-                    Submitter1
-                  </td>
-                  <td>
-                    Dev1
-                  </td>
-                  <td>
-                    <a asp-action="Edit" class="btn btn-outline-primary btn-block">Edit</a>
-                    <a asp-action="Details" class="btn btn-outline-primary btn-block">Details</a>
-                    <a asp-action="Delete" class="btn btn-outline-primary btn-block">Delete</a>
-                  </td>
-                </tr>
-                @*}*@
-                <tr>
-                  <td>
-                    Title2
-                  </td>
-                  <td>
-                    @DateTime.Now.ToString("MM/dd/yyyy")
-                  </td>
-                  <td>
-                    @DateTime.Now.ToString("MM/dd/yyyy")
-                  </td>
-                  <td>
-                    Project2
-                  </td>
-                  <td>
-                    Submitter2
-                  </td>
-                  <td>
-                    Dev2
-                  </td>
-                  <td>
-                    <a asp-action="Edit" class="btn btn-outline-primary btn-block">Edit</a>
-                    <a asp-action="Details" class="btn btn-outline-primary btn-block">Details</a>
-                    <a asp-action="Delete" class="btn btn-outline-primary btn-block">Delete</a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <!--end::Card-->
     </div>
   </div>
-
-  <!-- Content Row -->
   <div class="row">
-    <!-- Content Column -->
-    <div class="col-xl-12 mb-4 mx-auto">
-      <!-- Project Card Example -->
-      <div class="card shadow mb-4">
-        <div class="card-header py-3">
-          <h6 class="m-0 font-weight-bold text-primary">Projects - Only seen by Admin and PM (Slider moves based on total tickets / completed tickets)</h6>
+    <div class="col">
+      <!--begin::Card-->
+      <div class="card bg-dark-o-100 card-custom gutter-b">
+        <div class="card-header w-100">
+          <div class="card-title w-100">
+            <h3 class="card-label text-white mx-auto">Ticket Count on Projects</h3>
+          </div>
         </div>
         <div class="card-body">
-          <h4 class="small font-weight-bold">
-            Server Migration <span class="float-right">20%</span>
-          </h4>
-          <div class="progress mb-4">
-            <div class="progress-bar bg-danger"
-                 role="progressbar"
-                 style="width: 20%"
-                 aria-valuenow="20"
-                 aria-valuemin="0"
-                 aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">
-            Sales Tracking <span class="float-right">40%</span>
-          </h4>
-          <div class="progress mb-4">
-            <div class="progress-bar bg-warning"
-                 role="progressbar"
-                 style="width: 40%"
-                 aria-valuenow="40"
-                 aria-valuemin="0"
-                 aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">
-            Customer Database <span class="float-right">60%</span>
-          </h4>
-          <div class="progress mb-4">
-            <div class="progress-bar"
-                 role="progressbar"
-                 style="width: 60%"
-                 aria-valuenow="60"
-                 aria-valuemin="0"
-                 aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">
-            Payout Details <span class="float-right">80%</span>
-          </h4>
-          <div class="progress mb-4">
-            <div class="progress-bar bg-info"
-                 role="progressbar"
-                 style="width: 80%"
-                 aria-valuenow="80"
-                 aria-valuemin="0"
-                 aria-valuemax="100"></div>
-          </div>
-          <h4 class="small font-weight-bold">
-            Account Setup <span class="float-right">Complete!</span>
-          </h4>
-          <div class="progress">
-            <div class="progress-bar bg-success"
-                 role="progressbar"
-                 style="width: 100%"
-                 aria-valuenow="100"
-                 aria-valuemin="0"
-                 aria-valuemax="100"></div>
-          </div>
+          <div id="ticketProjectChart" style="height: 300px;"></div>
         </div>
       </div>
+      <!--end::Card-->
     </div>
   </div>
+  <div id="chart"></div>
 </div>
+
+@section Scripts {
+  <script>
+    // Status Chart
+    let statusUrl = '@Url.Action("GetStatusChartData", "Home")';
+    let statusData = [];
+    let colorArr = ['#1BC5BD', '#6993FF', '#FFA800', '#F64E60', '#28a745',];
+    let options = {
+      series: {
+        pie: {
+          show: true,
+        },
+      },
+      legend: {
+        show: false,
+      },
+      grid: {
+        show: false,
+        hoverable: true
+      }
+    };
+
+    // Status Chart
+    $.post(statusUrl).then((res) => {
+      //console.log(res);
+      res.forEach(el => {
+        //console.log(el)
+        statusData.push(el);
+      });
+      //console.log(data2);
+      statusData.forEach((col, i) => {
+        //console.log(col)
+        statusData[i].color = colorArr[i];
+      });
+      //console.log(statusData)
+      $.plot($("#statusChart"), statusData, options);
+
+      // Show memo for status chart on hover
+      $('#statusChart').bind("plothover", function (event, pos, item) {
+        if (!item) { return; }
+        var html = [];
+        var percent = parseFloat(item.series.percent).toFixed(2);
+        html.push("<div style=\"background-color:transparent\">",
+          "<span style=\"color: " + item.series.color + "\">",
+          item.series.label,
+          " : ",
+          item.series.data[0][1],
+          "</span>",
+          "</div>");
+        $("#statusChartMemo").html(html.join(''));
+      });
+      // When the mouse leaves the chart, clear ChartMemo
+      $("#statusChart").mouseout(() => {
+        //console.log('mouse is gone')
+        $('#statusChartMemo').empty();
+      });
+    });
+
+    // Priority Chart
+    let priorityUrl = '@Url.Action("GetPriorityChartData", "Home")';
+    let priorityData = [];
+    $.post(priorityUrl).then((res) => {
+      //console.log(res);
+      res.forEach(el => {
+        //console.log(el)
+        priorityData.push(el);
+      });
+      //console.log(data2);
+      priorityData.forEach((col, i) => {
+        //console.log(col)
+        priorityData[i].color = colorArr[i];
+      });
+      //console.log(priorityData)
+      $.plot($("#priorityChart"), priorityData, options);
+
+      // Show memo for priority chart on hover
+      $('#priorityChart').bind("plothover", function (event, pos, item) {
+        if (!item) { return; }
+        var html = [];
+        var percent = parseFloat(item.series.percent).toFixed(2);
+        html.push("<div style=\"background-color:transparent\">",
+          "<span style=\"color: " + item.series.color + "\">",
+          item.series.label,
+          " : ",
+          item.series.data[0][1],
+          "</span>",
+          "</div>");
+        $("#priorityChartMemo").html(html.join(''));
+      });
+      // When the mouse leaves the chart, clear ChartMemo
+      $("#priorityChart").mouseout(() => {
+        //console.log('mouse is gone')
+        $('#priorityChartMemo').empty();
+      });
+
+    });
+
+    // Type Chart
+    let typeUrl = '@Url.Action("GetTypeChartData", "Home")';
+    let typeData = [];
+    $.post(typeUrl).then((res) => {
+      //console.log(res);
+      res.forEach(el => {
+        //console.log(el)
+        typeData.push(el);
+      });
+      //console.log(data2);
+      typeData.forEach((col, i) => {
+        //console.log(col)
+        typeData[i].color = colorArr[i];
+      });
+
+      //console.log(priorityData)
+      $.plot($("#typeChart"), typeData, options);
+
+      // Show memo for type chart on hover
+      $('#typeChart').bind("plothover", function (event, pos, item) {
+        if (!item) { return; }
+        var html = [];
+        var percent = parseFloat(item.series.percent).toFixed(2);
+        html.push("<div style=\"background-color:transparent\">",
+          "<span style=\"color: " + item.series.color + "\">",
+          item.series.label,
+          " : ",
+          item.series.data[0][1],
+          "</span>",
+          "</div>");
+        $("#typeChartMemo").html(html.join(''));
+      });
+      // When the mouse leaves the chart, clear typeChartMemo
+      $("#typeChart").mouseout(() => {
+        //console.log('mouse is gone')
+        $('#typeChartMemo').empty();
+      });
+    });
+
+    // Bar Chart
+
+    let ticketCountUrl = '@Url.Action("GetTicketCountOnProjects", "Home")';
+    let colorIndex = 0;
+    $.post(ticketCountUrl).then((res) => {
+      Morris.Bar({
+        // ID of the element in which to draw the chart.
+        element: 'ticketProjectChart',
+        // Chart data records -- each entry in this array corresponds to a point on
+        // the chart.
+        data: res,
+        // The name of the data record attribute that contains x-values.
+        xkey: 'projectName',
+        // A list of names of data record attributes that contain y-values.
+        ykeys: ['ticketCount'],
+        // Labels for the ykeys -- will be displayed when you hover over the
+        // chart.
+        labels: ['Ticket Count'],
+        barColors: (row, series, type) => {
+          return colorArr[row.x]
+        },
+        hideHover: 'auto',
+        resize: true
+      });
+    });
+
+    // Fetch quote of the day
+
+    fetch("https://type.fit/api/quotes")
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        const random = Math.floor(Math.random() * data.length);
+        $('#quoteText').text(data[random].text);
+        $('#quoteAuthor').text(data[random].author != null ? data[random].author : 'Unknown Author');
+        console.log(data[random]);
+      });
+  </script>
+}
 
 @*LOGIN PAGE
 

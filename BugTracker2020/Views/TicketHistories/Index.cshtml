@@ -3,57 +3,55 @@
   ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-  <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-  <thead>
-    <tr>
-      <th>
-        @Html.DisplayNameFor(model => model.Property)
-      </th>
-      <th>
-        Old Value
-      </th>
-      <th>
-        New Value
-      </th>
-      <th>
-        @Html.DisplayNameFor(model => model.Created)
-      </th>
-      <th>
-        @Html.DisplayNameFor(model => model.Ticket)
-      </th>
-      <th>
-        Changed By 
-      </th>
-    </tr>
-  </thead>
-  <tbody>
-    @foreach (var item in Model)
-    {
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <h1>Ticket Hisories</h1>
+  <table class="table">
+    <thead>
       <tr>
-        <td>
-          @Html.DisplayFor(modelItem => item.Property)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.OldValue)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.NewValue)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.Created)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.Ticket.Description)
-        </td>
-        <td>
-          @Html.DisplayFor(modelItem => item.User.FullName)
-        </td>
+        <th>
+          @Html.DisplayNameFor(model => model.Property)
+        </th>
+        <th>
+          Old Value
+        </th>
+        <th>
+          New Value
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Created)
+        </th>
+        <th>
+          @Html.DisplayNameFor(model => model.Ticket)
+        </th>
+        <th>
+          Changed By
+        </th>
       </tr>
-    }
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      @foreach (var item in Model)
+      {
+        <tr>
+          <td>
+            @Html.DisplayFor(modelItem => item.Property)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.OldValue)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.NewValue)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.Created)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.Ticket.Title)
+          </td>
+          <td>
+            @Html.DisplayFor(modelItem => item.User.FullName)
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

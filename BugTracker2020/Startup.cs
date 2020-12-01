@@ -45,6 +45,7 @@ namespace BugTracker2020
       services.AddScoped<IBTProjectsService, BTProjectsService>();
       services.AddScoped<IBTHistoriesService, BTHistoriesService>();
       services.AddScoped<IBTAccessService, BTAccessService>();
+      services.AddScoped<IBTFileService, BTFileService>();
 
       services.Configure<MailSettings>(Configuration.GetSection("MailSettings"));
 

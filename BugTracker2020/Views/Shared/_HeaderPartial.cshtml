@@ -1,0 +1,128 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<BTUser> SignInManager
+@inject UserManager<BTUser> UserManager
+@inject BugTracker2020.Data.ApplicationDbContext db
+
+@{
+  var userId = UserManager.GetUserId(User);
+  var userName = db.Users.Find(userId).FullName;
+}
+<!--begin::HEADER******************************************************************************-->
+<div id="kt_header" class="header header-fixed">
+  <!--begin::HEADER CONTAINER**************************-->
+  <div class="container">
+    <!--begin::Left-->
+    <div class="d-none d-lg-flex align-items-center mr-3">
+      <!--begin::Logo-->
+      <a href="index.html" class="mr-20">
+        <img alt="Logo" src="~/assets/media/logos/logo-default.png" class="logo-default max-h-35px" />
+      </a><!--end::Logo-->
+    </div>
+    <!--end::Left-->
+    <!--begin::TOPBAR-->
+    <div class="topbar topbar-minimize">
+      @*BEGIN USER*@
+      <div class="dropdown">
+        <!--begin::Toggle-->
+        <div class="topbar-item" data-toggle="dropdown" data-offset="0px,0px">
+          <div class="btn btn-icon btn-clean h-40px w-40px btn-dropdown">
+            <span class="svg-icon svg-icon-lg">
+              <!--begin::Svg Icon | path:~/assets/media/svg/icons/General/User.svg-->
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   xmlns:xlink="http://www.w3.org/1999/xlink"
+                   width="24px"
+                   height="24px"
+                   viewBox="0 0 24 24"
+                   version="1.1">
+                <g stroke="none"
+                   stroke-width="1"
+                   fill="none"
+                   fill-rule="evenodd">
+                  <polygon points="0 0 24 0 24 24 0 24" />
+                  <path d="M12,11 C9.790861,11 8,9.209139 8,7 C8,4.790861 9.790861,3 12,3 C14.209139,3 16,4.790861 16,7 C16,9.209139 14.209139,11 12,11 Z"
+                        fill="#000000"
+                        fill-rule="nonzero"
+                        opacity="0.3" />
+                  <path d="M3.00065168,20.1992055 C3.38825852,15.4265159 7.26191235,13 11.9833413,13 C16.7712164,13 20.7048837,15.2931929 20.9979143,20.2 C21.0095879,20.3954741 20.9979143,21 20.2466999,21 C16.541124,21 11.0347247,21 3.72750223,21 C3.47671215,21 2.97953825,20.45918 3.00065168,20.1992055 Z"
+                        fill="#000000"
+                        fill-rule="nonzero" />
+                </g>
+              </svg>
+
+              <!--end::Svg Icon-->
+            </span>
+          </div>
+        </div>
+
+        <!--end::Toggle-->
+        <!--begin::DROPDOWN-->
+        <div class="dropdown-menu p-0 m-0 dropdown-menu-right dropdown-menu-anim-up dropdown-menu-md p-0">
+          <!--begin::Header-->
+          <div class="d-flex align-items-center p-5 rounded-top">
+            <!--begin::Symbol-->
+            <div class="symbol symbol-md bg-light-primary mr-3 flex-shrink-0">
+              <img src="~/assets/media/users/300_21.jpg" alt="" />
+            </div>
+
+            <!--end::Symbol-->
+            <!--begin::Text-->
+            <div class="text-dark m-0 flex-grow-1 font-size-h5">
+              <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@userName</a>
+            </div>
+            <!--end::Text-->
+          </div>
+          <div class="separator separator-solid"></div>
+
+          <!--end::Header-->
+          <!--begin::NAV-->
+          <div class="navi navi-spacer-x-0 pt-5">
+            @if (!User.IsInRole("Submitter") && !User.IsInRole("NewUser"))
+            {
+              <!--begin::Item-->
+              <a asp-controller="Projects" asp-action="MyProjects" class="navi-item px-8">
+                <div class="navi-link">
+                  <div class="navi-icon mr-2">
+                    <i class="flaticon2-analytics text-success"></i>
+                  </div>
+                  <div class="navi-text">
+                    <div class="font-weight-bold">My Proects</div>
+                  </div>
+                </div>
+              </a>
+              <!--end::Item-->
+            }
+            <!--begin::Item-->
+            <a asp-controller="Tickets" asp-action="MyTickets" class="navi-item px-8">
+              <div class="navi-link">
+                <div class="navi-icon mr-2">
+                  <i class="flaticon2-chart text-warning"></i>
+                </div>
+                <div class="navi-text">
+                  <div class="font-weight-bold">My Tickets</div>
+                </div>
+              </div>
+            </a>
+            <!--end::Item-->
+
+            <div class="navi-separator mt-3"></div>
+            <div class="navi-footer px-8 py-5">
+              <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="dropdown-item">
+                  <i class="fas fa-fw mr-2 fa-sign-out-alt text-gray-400"></i>
+                  Sign Out
+                </button>
+              </form>
+            </div>
+            <!--end::FOOTER-->
+          </div>
+          <!--end::NAV-->
+        </div>
+        <!--end::DROPDOWN-->
+      </div>
+      <!--end::USER-->
+    </div>
+    <!--end::TOPBAR-->
+  </div>
+  <!--end::HEADER CONTAINER******************************************************-->
+</div>
+<!--end::HEADER***************************************************************-->

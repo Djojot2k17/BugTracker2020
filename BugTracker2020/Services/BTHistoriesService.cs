@@ -139,7 +139,7 @@ namespace BugTracker2020.Services
           };
           await _context.TicketHistories.AddAsync(history);
         }
-        // For now - maybe we can get a notification service
+        //For now -maybe we can get a notification service
         Notification notification = new Notification
         {
           TicketId = newTicket.Id,
@@ -155,7 +155,6 @@ namespace BugTracker2020.Services
           string devEmail = newTicket.DeveloperUser.Email;
           string subject = "New Ticket Assignment";
           string message = $"You have a new ticket for project: {newTicket.Project.Name}";
-
           await _emailSender.SendEmailAsync(devEmail, subject, message);
         }
         catch (Exception ex)

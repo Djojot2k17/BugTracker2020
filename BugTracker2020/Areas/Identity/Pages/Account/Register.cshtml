@@ -1,67 +1,108 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+  ViewData["Title"] = "Register";
+  Layout = null;
 }
+<!DOCTYPE html>
+<html lang="en">
+<!--begin::Head-->
+<head>
+  <base href="../../../../">
+  <meta charset="utf-8" />
+  <title>Register | Metronic</title>
+  <meta name="description" content="Login page example" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="canonical" href="https://keenthemes.com/metronic" />
+  <!--begin::Fonts-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+  <!--end::Fonts-->
+  <!--begin::Page Custom Styles(used by this page)-->
+  <link href="~/css/pages/login/classic/login-5.css" rel="stylesheet" type="text/css" />
+  <!--end::Page Custom Styles-->
+  <!--begin::Global Theme Styles(used by all pages)-->
+  <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+  <link href="~/assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+  <link href="~/css/style.bundle.css" rel="stylesheet" type="text/css" />
+  <!--end::Global Theme Styles-->
+  <!--begin::Layout Themes(used by all pages)-->
+  <!--end::Layout Themes-->
+  <link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
+</head>
+<!--end::Head-->
 
-<h1>@ViewData["Title"]</h1>
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h4>Create a new account.</h4>
-            <hr />
-            <div asp-validation-summary="All" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
+
+<!--
+Template Name: Metronic - Bootstrap 4 HTML, React, Angular 10 & VueJS Admin Dashboard Theme
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Dribbble: www.dribbble.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: https://1.envato.market/EA4JP
+Renew Support: https://1.envato.market/EA4JP
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<!--begin::Body-->
+<body id="kt_body" class="header-fixed subheader-enabled page-loading">
+  <!--begin::Main-->
+  <div class="d-flex flex-column flex-root">
+    <!--begin::Login-->
+    <div class="login login-5 login-signin-on d-flex flex-row-fluid" id="kt_login">
+      <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url(/assets/media/bg/bg-2.jpg);">
+        <div class="login-form text-center text-white p-7 position-relative overflow-hidden">
+          <!--begin::Login Header-->
+          <div class="d-flex flex-center mb-15">
+            <a href="#">
+              <img src="~/assets/media/logos/logo-letter-13.png" class="max-h-75px" alt="" />
+            </a>
+          </div>
+          <!--end::Login Header-->
+          <!--begin::Login Sign up form-->
+          <div class="login-signin">
+            <div class="mb-20">
+              <h3 class="opacity-40 font-weight-normal">Sign Up</h3>
+              <p class="opacity-40">Enter your details to create your account</p>
+            </div>
+            <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form text-center" autocomplete="off">
+              <div class="form-group">
+                <input asp-for="Input.FirstName" class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8" placeholder="First Name" />
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+              </div>
+              <div class="form-group">
+                <input asp-for="Input.LastName" class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8" placeholder="Last Name" />
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+              </div>
+              <div class="form-group">
+                <input asp-for="Input.Email" class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8" placeholder="Email" autocomplete="off" />
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
+              </div>
+              <div class="form-group">
+                <input asp-for="Input.Password" class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8" placeholder="Password" autocomplete="off" />
                 <span asp-validation-for="Input.Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Input.ConfirmPassword"></label>
-                <input asp-for="Input.ConfirmPassword" class="form-control" />
+              </div>
+              <div class="form-group">
+                <input asp-for="Input.ConfirmPassword" class="form-control h-auto text-white bg-white-o-5 rounded-pill border-0 py-4 px-8" placeholder="Confirm Password" />
                 <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
-            </div>
-            <button type="submit" class="btn btn-primary">Register</button>
-        </form>
+              </div>
+              <button type="submit" class="btn btn-pill btn-primary opacity-90 px-15 py-3 m-2">Register</button>
+              <button asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl" class="btn btn-pill btn-outline-white opacity-70 px-15 py-3 m-2">Cancel</button>
+            </form>
+          </div>
+          <!--end::Login Sign up form-->
+        </div>
+      </div>
     </div>
-    <div class="col-md-6 col-md-offset-2">
-        <section>
-            <h4>Use another service to register.</h4>
-            <hr />
-            @{
-                if ((Model.ExternalLogins?.Count ?? 0) == 0)
-                {
-                    <div>
-                        <p>
-                            There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                            for details on setting up this ASP.NET application to support logging in via external services.
-                        </p>
-                    </div>
-                }
-                else
-                {
-                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
-                        <div>
-                            <p>
-                                @foreach (var provider in Model.ExternalLogins)
-                                {
-                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
-                                }
-                            </p>
-                        </div>
-                    </form>
-                }
-            }
-        </section>
-    </div>
-</div>
+    <!--end::Login-->
+  </div>
 
-@section Scripts {
+  @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
+  }
+</body>
+<!--end::Body-->
+</html>
+
+

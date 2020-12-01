@@ -1,46 +1,125 @@
-﻿@model BugTracker2020.Models.Project
-
+﻿@using Microsoft.AspNetCore.Identity
+@using BugTracker2020.Services
+@model BugTracker2020.Models.ViewModels.ProjectTicketsViewModel
+@inject UserManager<BTUser> UserManager
+@inject IBTProjectsService ProjectsService
+@inject IBTAccessService AccessService
 @{
   ViewData["Title"] = "Details";
+  var userId = UserManager.GetUserId(User);
+  var roleName = (await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User))).FirstOrDefault();
 }
 
-<div class="container text-gray-200 pt-3">
-  <h1 class="text-center border-bottom-light rounded">Details</h1>
-
-  <div>
-    <h4>@Model.Name</h4>
-    <hr />
-    <dl class="row">
-      <dt class="col-sm-2">
-        @Html.DisplayNameFor(model => model.Name)
-      </dt>
-      <dd class="col-sm-10">
-        @Html.DisplayFor(model => model.Name)
-      </dd>
-      @*<dt class="col-sm-2">
-          @Html.DisplayNameFor(model => model.ImagePath)
-        </dt>
-        <dd class="col-sm-10">
-          @Html.DisplayFor(model => model.ImagePath)
-        </dd>
-        <dt class="col-sm-2">
-          @Html.DisplayNameFor(model => model.ImageData)
-        </dt>
-        <dd class="col-sm-10">
-          @Html.DisplayFor(model => model.ImageData)
-        </dd>*@
-      <dt class="col-sm-2">Members</dt>
-      <dd class="col-sm-10">
-        @foreach (var item in Model.ProjectUsers)
-        {
-          <p>@item.User.FullName</p>
-        }
-      </dd>
-    </dl>
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <h1 class="text-center">@Model.Project.Name</h1>
+  <div class="row mb-3">
   </div>
-  <div>
-    @*<a class="btn btn-dark border" asp-action="ManageProjectUsers" asp-route-id="@Model.Id">Manage Users</a>*@
-    <a class="btn btn-dark border" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
-    <a class="btn btn-dark border" asp-action="Index">Back to List</a>
+  <div class="rounded border border-2 border-white shadow-lg p-3">
+    <div class="col d-flex justify-content-between">
+      <div>
+        <h4 class="pt-3">Tickets for @Model.Project.Name</h4>
+      @{ var usersOnProject = ProjectsService.UsersOnProject(Model.Project.Id).Result; }
+      <div id="members" class="pt-2">Assigned Members: @if (usersOnProject.Count > 0) { foreach (var user in usersOnProject) { <span>@user.FullName,</span> } } </div>
+      </div>
+      <div>
+        <div class="text-right">
+          @if (await AccessService.CanAccessProject(userId, Model.Project.Id, roleName))
+          {
+            <a asp-controller="Tickets" asp-action="Create" asp-route-id="@Model.Project.Id" class="btn btn-outline-primary mb-0">New Ticket</a>
+          }
+        <div class="pt-2">To see more information click on the details of a ticket.</div>
+        </div>
+      </div>
+    </div>
+    <div class="row p-3">
+      <div class="col">
+        <hr class="bg-white-o-100" />
+        <table class="table text-center shadow bg-white-o-20">
+          <thead class="bg-dark">
+            <tr>
+              <th>Title</th>
+              <th>Created</th>
+              <th>Updated</th>
+              <th>Type</th>
+              <th>Priority</th>
+              <th>Status</th>
+              <th>Submitted By</th>
+              <th>Developer</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @foreach (var item in Model.Tickets)
+            {
+              <tr>
+                <td>
+                  @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                  @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                  @Html.DisplayFor(modelItem => item.Updated)
+                </td>
+                <td>
+                  @Html.DisplayFor(modelItem => item.TicketType.Name)
+                </td>
+                <td>
+                  @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+                </td>
+                <td>
+                  @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+                </td>
+                <td>
+                  @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
+                </td>
+                <td>
+                  @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
+                </td>
+                <td>
+                  @if (await AccessService.CanAccessTicket(userId, item.Id, roleName))
+                  {
+                    <a asp-controller="Tickets" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-info">Edit</a>
+                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Details</a>
+                    <a asp-controller="Tickets" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <hr class="bg-light">
+    <div class="row p-3">
+      <div class="col">
+        <h4>History Tracker</h4>
+        @foreach (var ticket in Model.Tickets)
+        {
+          if (ticket.Histories.Count > 0)
+          {
+            foreach (var ticketHistory in ticket.Histories.OrderByDescending(h => h.Created).Take(10))
+            {
+              <p>At @ticketHistory.Created, @ticketHistory.Ticket.Title's @ticketHistory.Property was changed from @ticketHistory.OldValue to @ticketHistory.NewValue by @ticketHistory.User.FullName</p>
+            }
+          }
+        }
+      </div>
+    </div>
+    <hr class="bg-light">
+    <div>
+      @*<a class="btn btn-dark border" asp-action="ManageProjectUsers" asp-route-id="@Model.Id">Manage Users</a>*@
+      <a class="btn btn-outline-info" asp-action="Edit" asp-route-id="@Model.Project.Id">Edit Project</a>
+      <a class="btn btn-outline-info" asp-action="Index">Back to List</a>
+    </div>
   </div>
 </div>
+
+<script>
+  let member = document.getElementById('members');
+  let memberText = member.textContent;
+  console.log(memberText);
+  let trimmedComma = memberText.replace(/,\s*$/, "");
+  console.log(trimmedComma)
+  member.innerText = trimmedComma;
+</script>

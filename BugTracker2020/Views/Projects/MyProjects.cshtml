@@ -14,60 +14,87 @@
   //string userId2 = user.Id;
 }
 
-<div class="container pt-3 text-gray-200">
-  <h1 class="text-center border-bottom-light rounded">My Projects</h1>
-
-  @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
-  {
-    <p>
-      <a asp-action="Create" class="btn btn-dark border mt-2">Create New</a>
-    </p>
-  }
-  <table class="table table-bordered table-dark">
-    <thead class="bg-gradient-dark text-gray-200">
-      <tr>
-        <th>
-          Project Name
-        </th>
-        <th>
-          Project Image
-        </th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      @if (Model.Any() == false)
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <div class="d-flex justify-content-between">
+    <div>
+      <h1>My Projects</h1>
+      <p>Here you'll find a list of all the projects you're assigned to.</p>
+    </div>
+    <div class="pt-5">
+      @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
       {
-        <tr>
-          <td>No Projects Assigned</td>
-          <td></td>
-          <td></td>
-        </tr>
+        <a asp-action="Create" class="btn btn-dark border">Create New</a>
       }
-      else
-      {
-        @foreach (var item in Model)
+      <a asp-action="Index" class="btn btn-dark border">Back To All Projects</a>
+    </div>
+  </div>
+  <div class="bg-dark-o-80 p-3 shadow-lg border border-dark border-2 rounded mt-5">
+    <table class="table text-center shadow bg-white-o-20">
+      <thead class="bg-dark">
+        <tr>
+          <th>
+            Project Name
+          </th>
+          <th>
+            Project Image
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (Model.Any() == false)
         {
           <tr>
-            <td style="vertical-align: middle;">
-              @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td style="vertical-align: middle;">
-              ImageModal
-            </td>
-            <td style="vertical-align: middle;">
-              @if (await AccessService.CanAccessProject(userId, item.Id, roleName))
-              {
-                <a asp-action="AddImage" asp-route-id="@item.Id" class="btn btn-dark border">Add Image</a>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark border">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark border">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-dark border">Delete</a>
-              }
-            </td>
+            <td>No Projects Assigned</td>
+            <td></td>
+            <td></td>
           </tr>
         }
-      }
-    </tbody>
-  </table>
-  <a asp-action="Index" class="btn btn-dark border">Back To All Projects</a>
+        else
+        {
+          @foreach (var item in Model)
+          {
+            <tr>
+              <td style="vertical-align: middle;">
+                @Html.DisplayFor(modelItem => item.Name)
+              </td>
+              <td style="vertical-align: middle;">
+                @if (item.ImageData == null)
+                {
+                  <span>No Image Uploaded</span>
+                }
+                else
+                {
+                  <a class="btn btn-outline-light text-white" data-toggle="modal" data-target="#image-@item.Id">View Image</a>
+                  <div class="modal fade" id="image-@item.Id">
+                    <div class="modal-dialog modal-xl">
+                      <div class="modal-content bg-dark">
+                        <div class="modal-header">
+                          <h5 class="modal-title text-gray-200">Project Image for @item.Name</h5>
+                        </div>
+                        <div class="modal-body">
+                          <img src="@item.ImagePath" alt="@item.ImagePath" class="img-fluid">
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-light text-white" data-dismiss="modal">Close</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                }
+              </td>
+              <td style="vertical-align: middle;">
+                @if (await AccessService.CanAccessProject(userId, item.Id, roleName))
+                {
+                  <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark border">Edit</a>
+                  <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark border">Details</a>
+                  <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-dark border">Delete</a>
+                }
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
 </div>

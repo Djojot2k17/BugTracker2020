@@ -7,8 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace BugTracker2020.Utilities
@@ -56,6 +54,10 @@ namespace BugTracker2020.Utilities
         using var svcScope = host.Services.CreateScope();
         var svcProvider = svcScope.ServiceProvider;
 
+        // The service will run your migrations
+        var dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
+        await dbContextSvc.Database.MigrateAsync();
+
         // Seed Data
         var services = svcScope.ServiceProvider;
         var context = services.GetRequiredService<ApplicationDbContext>();
@@ -64,10 +66,9 @@ namespace BugTracker2020.Utilities
         await ContextSeed.SeedRolesAsync(rolemanager);
         await ContextSeed.SeedDefaultUsersAsync(usermanager);
         await ContextSeed.SeedDefaultTicketPropsAsync(context);
-
-        // The service will run your migrations
-        var dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
-        await dbContextSvc.Database.MigrateAsync();
+        await ContextSeed.SeedProjectsAsync(context);
+        await ContextSeed.SeedProjectUsersAsync(context, usermanager);
+        await ContextSeed.SeedTicketsAsync(context, usermanager);
       }
       catch (Exception ex)
       {

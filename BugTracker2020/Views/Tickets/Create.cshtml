@@ -3,76 +3,88 @@
 @{
   ViewData["Title"] = "Create";
 }
-<div class="container pt-3 text-gray-200">
-  <h1 class="text-center border-bottom-light rounded">Create</h1>
 
-  <h4>Ticket</h4>
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+
+  <h2 class="text-center">Create Ticket for @Model.Project.Name</h2>
   <hr />
-  <div class="row">
-    <div class="col-lg-8 mx-auto">
-      <form asp-action="Create" enctype="multipart/form-data">
-        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group">
-          <label asp-for="Title" class="control-label"></label>
-          <input asp-for="Title" class="form-control" />
-          <span asp-validation-for="Title" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-          <label asp-for="Description" class="control-label"></label>
-          <input asp-for="Description" class="form-control" />
-          <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-        @*<div class="form-group">
-              <label asp-for="Created" class="control-label"></label>
-              <input asp-for="Created" class="form-control" />
-              <span asp-validation-for="Created" class="text-danger"></span>
+  <div class="d-flex justify-content-center align-items-center">
+    <div class="rounded border border-2 border-white shadow-lg p-5 w-lg-50 w-100">
+      <div class="row">
+        <div class="col">
+          <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ProjectId">
+            <div class="form-group">
+              <input asp-for="Title" placeholder="Title" class="form-control bg-dark-o-100 text-white" />
+              <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+              <textarea asp-for="Description" placeholder="Description" class="form-control bg-dark-o-100 text-white" rows="3"></textarea>
+              <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+            {
+              <div class="form-group">
+                <label asp-for="TicketTypeId" class="control-label text-white">Of what type will this ticket be?</label>
+                <select asp-for="TicketTypeId" class="form-control custom-select" asp-items="ViewBag.TicketTypeId"></select>
+              </div>
+              <div class="form-group">
+                <label asp-for="TicketPriorityId" class="control-label text-white">Of what priority will this ticket be?</label>
+                <select asp-for="TicketPriorityId" class="form-control custom-select" asp-items="ViewBag.TicketPriorityId"></select>
+              </div>
+              <div class="form-group">
+                <label asp-for="TicketStatusId" class="control-label text-white">What status will you assign this ticket?</label>
+                <select asp-for="TicketStatusId" class="form-control custom-select" asp-items="ViewBag.TicketStatusId"></select>
+              </div>
+              <div class="form-group">
+                <label asp-for="DeveloperUserId" class="control-label text-white">Should anything go wrong, who will be to blame?</label>
+                <select asp-for="DeveloperUserId" class="form-control custom-select" asp-items="ViewBag.DeveloperUserId"></select>
+              </div>
+            }
+            @if (User.IsInRole("Developer"))
+            {
+              <div class="form-group">
+                <label asp-for="TicketTypeId" class="control-label text-white">Of what type will this ticket be?</label>
+                <select asp-for="TicketTypeId" class="form-control custom-select" asp-items="ViewBag.TicketTypeId"></select>
+              </div>
+              <div class="form-group">
+                <label asp-for="TicketPriorityId" class="control-label text-white">Of what priority will this ticket be?</label>
+                <select asp-for="TicketPriorityId" class="form-control custom-select" asp-items="ViewBag.TicketPriorityId"></select>
+              </div>
+              <div class="form-group">
+                <label asp-for="TicketStatusId" class="control-label text-white">What status will you assign this ticket?</label>
+                <select asp-for="TicketStatusId" class="form-control custom-select" asp-items="ViewBag.TicketStatusId"></select>
+              </div>
+            }
+            @if (User.IsInRole("Submitter"))
+            {
+              <div class="form-group">
+                <label asp-for="TicketPriorityId" class="control-label text-white">Of what priority will this ticket be?</label>
+                <select asp-for="TicketPriorityId" class="form-control custom-select" asp-items="ViewBag.TicketPriorityId"></select>
+              </div>
+            }
+          <label class="text-white">Ticket Attachment</label>
+          <div class="custom-file">
+            <input type="file" name="attachments" class="custom-file-input" id="customFile" multiple />
+            <label class="custom-file-label bg-dark-o-100 text-white" for="customFile">Choose file</label>
           </div>
-          <div class="form-group">
-              <label asp-for="Updated" class="control-label"></label>
-              <input asp-for="Updated" class="form-control" />
-              <span asp-validation-for="Updated" class="text-danger"></span>
-          </div>*@
-        <div class="form-group">
-          <label asp-for="ProjectId" class="control-label">To which project will this ticket belong?</label>
-          <select asp-for="ProjectId" class="form-control" asp-items="ViewBag.ProjectId"></select>
+            <hr>
+            <div class="form-group text-center">
+              <input type="submit" value="Create" class="btn btn-outline-primary" />
+              <a asp-controller="Projects" asp-action="Details" asp-route-id="@ViewData["ProjectIdGET"]" class="btn btn-dark border">Back to List</a>
+            </div>
+          </form>
         </div>
-        <div class="form-group">
-          <label asp-for="TicketTypeId" class="control-label">Of what type will this ticket be?</label>
-          <select asp-for="TicketTypeId" class="form-control" asp-items="ViewBag.TicketTypeId"></select>
-        </div>
-        <div class="form-group">
-          <label asp-for="TicketPriorityId" class="control-label">Of what priority will this ticket be?</label>
-          <select asp-for="TicketPriorityId" class="form-control" asp-items="ViewBag.TicketPriorityId"></select>
-        </div>
-        <div class="form-group">
-          <label asp-for="TicketStatusId" class="control-label">What status will you assign this ticket?</label>
-          <select asp-for="TicketStatusId" class="form-control" asp-items="ViewBag.TicketStatusId"></select>
-        </div>
-        @*<div class="form-group">
-              <label asp-for="OwnerUserId" class="control-label"></label>
-              <select asp-for="OwnerUserId" class ="form-control" asp-items="ViewBag.OwnerUserId"></select>
-          </div>*@
-        <div class="form-group">
-          <label asp-for="DeveloperUserId" class="control-label">Should anything go wrong, who will be to blame?</label>
-          <select asp-for="DeveloperUserId" class="form-control" asp-items="ViewBag.DeveloperUserId"></select>
-        </div>
-        <div class="form-group">
-          <label for="attachments">Attach away</label>
-          <input name="attachments" class="form-control-file" type="file" multiple />
-        </div>
-        <div class="form-group">
-          <input type="submit" value="Create" class="btn btn-dark border" />
-          <a asp-action="Index" class="btn btn-dark border">Back to List</a>
-        </div>
-      </form>
+      </div>
+
+      <div>
+      </div>
+
+      @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+      }
+
     </div>
   </div>
-
-  <div>
-  </div>
-
-  @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-  }
-
 </div>

@@ -1,5 +1,6 @@
 ﻿using BugTracker2020.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -366,7 +367,7 @@ namespace BugTracker2020.Data
       #endregion
     }
 
-    // Seed ticket info
+    // Seed Ticket Props - TicketPriority, TicketStatus, TicketType
     public static async Task SeedDefaultTicketPropsAsync(ApplicationDbContext context)
     {
       try
@@ -430,6 +431,563 @@ namespace BugTracker2020.Data
       catch (Exception ex)
       {
         Debug.WriteLine($"Error something went wrong... {ex}");
+      }
+    }
+
+    // Seed Projects
+    public static async Task SeedProjectsAsync(ApplicationDbContext context)
+    {
+      Project seedProject1 = new Project
+      {
+        Name = "Blog Project"
+      };
+      try
+      {
+        var newProject = await context.Projects.FirstOrDefaultAsync(p => p.Name == "Blog Project");
+        if (newProject == null)
+        {
+          await context.Projects.AddAsync(seedProject1);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project1.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+      };
+
+      Project seedProject2 = new Project
+      {
+        Name = "Status Tracker Project"
+      };
+      try
+      {
+        var newProject = await context.Projects.FirstOrDefaultAsync(p => p.Name == "Status Tracker Project");
+        if (newProject == null)
+        {
+          await context.Projects.AddAsync(seedProject2);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project2.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+      };
+
+      Project seedProject3 = new Project
+      {
+        Name = "Financial Portal Project"
+      };
+      try
+      {
+        var newProject = await context.Projects.FirstOrDefaultAsync(p => p.Name == "Financial Portal Project");
+        if (newProject == null)
+        {
+          await context.Projects.AddAsync(seedProject3);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project3.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+      };
+    }
+    // Seed ProjectUsers
+    public static async Task SeedProjectUsersAsync(ApplicationDbContext context, UserManager<BTUser> userManager)
+    {
+      string adminId = (await userManager.FindByEmailAsync("exampleAdmin@code.com")).Id;
+      string projectManagerId = (await userManager.FindByEmailAsync("examplePm@code.com")).Id;
+      string developerId = (await userManager.FindByEmailAsync("exampleDev@code.com")).Id;
+      string submitterId = (await userManager.FindByEmailAsync("exampleSubmitter@code.com")).Id;
+      int project1Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Blog Project")).Id;
+      int project2Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Status Tracker Project")).Id;
+      int project3Id = (await context.Projects.FirstOrDefaultAsync(predicate => predicate.Name == "Financial Portal Project")).Id;
+
+      ProjectUser projectUser = new ProjectUser
+      {
+        UserId = adminId,
+        ProjectId = project1Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project1Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project1.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = projectManagerId,
+        ProjectId = project1Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == projectManagerId && r.ProjectId == project1Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project1.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = developerId,
+        ProjectId = project1Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == developerId && r.ProjectId == project1Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project1.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = submitterId,
+        ProjectId = project1Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == submitterId && r.ProjectId == project1Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project1.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = adminId,
+        ProjectId = project2Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project2Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project2.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = projectManagerId,
+        ProjectId = project2Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == projectManagerId && r.ProjectId == project2Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project2.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = developerId,
+        ProjectId = project2Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == developerId && r.ProjectId == project2Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project2.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = submitterId,
+        ProjectId = project3Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == submitterId && r.ProjectId == project3Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project2.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = adminId,
+        ProjectId = project3Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == adminId && r.ProjectId == project3Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project3.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = projectManagerId,
+        ProjectId = project3Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == projectManagerId && r.ProjectId == project3Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project3.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = developerId,
+        ProjectId = project3Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == developerId && r.ProjectId == project3Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project3.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+
+      projectUser = new ProjectUser
+      {
+        UserId = submitterId,
+        ProjectId = project3Id
+      };
+      try
+      {
+        var record = await context.ProjectUsers.FirstOrDefaultAsync(r => r.UserId == submitterId && r.ProjectId == project3Id);
+        if (record == null)
+        {
+          await context.ProjectUsers.AddAsync(projectUser);
+          await context.SaveChangesAsync();
+        }
+      }
+      catch (Exception ex)
+      {
+        Debug.WriteLine("*************ERROR*************");
+        Debug.WriteLine("Error Seeding Default Project3.");
+        Debug.WriteLine(ex.Message);
+        Debug.WriteLine("*******************************");
+        throw;
+
+      };
+    }
+    // Seed Tickets
+    public static async Task SeedTicketsAsync(ApplicationDbContext context, UserManager<BTUser> userManager)
+    {
+      {
+        string developerId = (await userManager.FindByEmailAsync("exampleDev@code.com")).Id;
+        string submitterId = (await userManager.FindByEmailAsync("exampleSubmitter@code.com")).Id;
+        int project1Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Blog Project")).Id;
+        int project2Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Status Tracker Project")).Id;
+        int project3Id = (await context.Projects.FirstOrDefaultAsync(p => p.Name == "Financial Portal Project")).Id;
+        int statusId = (await context.TicketStatuses.FirstOrDefaultAsync(ts => ts.Name == "Open")).Id;
+        int typeId = (await context.TicketTypes.FirstOrDefaultAsync(tt => tt.Name == "FrontEnd")).Id;
+        int priorityId = (await context.TicketPriorities.FirstOrDefaultAsync(tp => tp.Name == "High")).Id;
+
+        Ticket ticket = new Ticket
+        {
+          Title = "Need more blog posts",
+          Description = "It's not a real blog when you only have a single post. Our users have requested you present more content. Without the content the Google crawlers will never up our organic ranking",
+          Created = DateTimeOffset.Now.AddDays(-7),
+          Updated = DateTimeOffset.Now.AddHours(-30),
+          ProjectId = project1Id,
+          TicketPriorityId = priorityId,
+          TicketTypeId = typeId,
+          TicketStatusId = statusId,
+          DeveloperUserId = developerId,
+          OwnerUserId = submitterId
+        };
+        try
+        {
+          var newTicket = await context.Tickets.FirstOrDefaultAsync(t => t.Title == "Need more blog posts");
+          if (newTicket == null)
+          {
+            await context.Tickets.AddAsync(ticket);
+            await context.SaveChangesAsync();
+          }
+        }
+        catch (Exception ex)
+        {
+          Debug.WriteLine("************* ERROR *************");
+          Debug.WriteLine("Error Seeding Ticket 1.");
+          Debug.WriteLine(ex.Message);
+          Debug.WriteLine("*********************************");
+        };
+
+        ticket = new Ticket
+        {
+          Title = "New landing page",
+          Description = "It's not a real blog when you only have a single post, without the content the Google crawlers will never up our organic ranking",
+          Created = DateTimeOffset.Now.AddDays(-7),
+          Updated = DateTimeOffset.Now.AddHours(-30),
+          ProjectId = project2Id,
+          TicketPriorityId = priorityId,
+          TicketTypeId = typeId,
+          TicketStatusId = statusId,
+          DeveloperUserId = developerId,
+          OwnerUserId = submitterId
+        };
+        try
+        {
+          var newTicket = await context.Tickets.FirstOrDefaultAsync(t => t.Title == "New landing page");
+          if (newTicket == null)
+          {
+            await context.Tickets.AddAsync(ticket);
+            await context.SaveChangesAsync();
+          }
+        }
+        catch (Exception ex)
+        {
+          Debug.WriteLine("************* ERROR *************");
+          Debug.WriteLine("Error Seeding Ticket 1.");
+          Debug.WriteLine(ex.Message);
+          Debug.WriteLine("*********************************");
+        };
+
+        ticket = new Ticket
+        {
+          Title = "New algo for financial portal",
+          Description = "It's not a real financial portal when you only have a single institution. Our users have requested you present more institutions dammit. Without the content the Google crawlers will never up our organic ranking",
+          Created = DateTimeOffset.Now.AddDays(-7),
+          Updated = DateTimeOffset.Now.AddHours(-30),
+          ProjectId = project3Id,
+          TicketPriorityId = priorityId,
+          TicketTypeId = typeId,
+          TicketStatusId = statusId,
+          DeveloperUserId = developerId,
+          OwnerUserId = submitterId
+        };
+        try
+        {
+          var newTicket = await context.Tickets.FirstOrDefaultAsync(t => t.Title == "New algo for financial portal");
+          if (newTicket == null)
+          {
+            await context.Tickets.AddAsync(ticket);
+            await context.SaveChangesAsync();
+          }
+        }
+        catch (Exception ex)
+        {
+          Debug.WriteLine("************* ERROR *************");
+          Debug.WriteLine("Error Seeding Ticket 1.");
+          Debug.WriteLine(ex.Message);
+          Debug.WriteLine("*********************************");
+        };
+
+        ticket = new Ticket
+        {
+          Title = "UI & UX",
+          Description = "Edit view is incomplete",
+          Created = DateTimeOffset.Now.AddDays(-14),
+          Updated = DateTimeOffset.Now.AddHours(-60),
+          ProjectId = project1Id,
+          TicketPriorityId = priorityId,
+          TicketTypeId = typeId,
+          TicketStatusId = statusId,
+          DeveloperUserId = developerId,
+          OwnerUserId = submitterId
+        };
+        try
+        {
+          var newTicket = await context.Tickets.FirstOrDefaultAsync(t => t.Title == "UI & UX");
+          if (newTicket == null)
+          {
+            await context.Tickets.AddAsync(ticket);
+            await context.SaveChangesAsync();
+          }
+        }
+        catch (Exception ex)
+        {
+          Debug.WriteLine("************* ERROR *************");
+          Debug.WriteLine("Error Seeding Ticket 2.");
+          Debug.WriteLine(ex.Message);
+          Debug.WriteLine("*********************************");
+        };
+
+        ticket = new Ticket
+        {
+          Title = "Runtime Issues",
+          Description = "It's running, but it has issues.",
+          Created = DateTimeOffset.Now.AddDays(-7),
+          Updated = DateTimeOffset.Now.AddHours(-30),
+          ProjectId = project2Id,
+          TicketPriorityId = priorityId,
+          TicketTypeId = typeId,
+          TicketStatusId = statusId,
+          DeveloperUserId = developerId,
+          OwnerUserId = submitterId
+        };
+        try
+        {
+          var newTicket = await context.Tickets.FirstOrDefaultAsync(t => t.Title == "Runtime Issues");
+          if (newTicket == null)
+          {
+            await context.Tickets.AddAsync(ticket);
+            await context.SaveChangesAsync();
+          }
+        }
+        catch (Exception ex)
+        {
+          Debug.WriteLine("************* ERROR *************");
+          Debug.WriteLine("Error Seeding Ticket 2.");
+          Debug.WriteLine(ex.Message);
+          Debug.WriteLine("*********************************");
+        };
+
+        ticket = new Ticket
+        {
+          Title = "Backend",
+          Description = "Missing functionality requested by the customer. In other words... NOT TO SPEC!",
+          Created = DateTimeOffset.Now.AddDays(-5),
+          Updated = DateTimeOffset.Now.AddHours(-15),
+          ProjectId = project3Id,
+          TicketPriorityId = priorityId,
+          TicketTypeId = typeId,
+          TicketStatusId = statusId,
+          DeveloperUserId = developerId,
+          OwnerUserId = submitterId
+        };
+        try
+        {
+          var newTicket = await context.Tickets.FirstOrDefaultAsync(t => t.Title == "Bakend");
+          if (newTicket == null)
+          {
+            await context.Tickets.AddAsync(ticket);
+            await context.SaveChangesAsync();
+          }
+        }
+        catch (Exception ex)
+        {
+          Debug.WriteLine("************* ERROR *************");
+          Debug.WriteLine("Error Seeding Ticket 2.");
+          Debug.WriteLine(ex.Message);
+          Debug.WriteLine("*********************************");
+        };
       }
     }
   }

@@ -35,6 +35,7 @@ namespace BugTracker2020.Controllers
     // GET: Tickets
     public async Task<IActionResult> Index()
     {
+      TempData["InTicketsPage"] = true;
       var applicationDbContext = _context.Tickets.Include(t => t.DeveloperUser).Include(t => t.OwnerUser).Include(t => t.Project).Include(t => t.TicketPriority).Include(t => t.TicketStatus).Include(t => t.TicketType).Include(t => t.Attachments);
       return View(await applicationDbContext.ToListAsync());
     }
@@ -42,6 +43,7 @@ namespace BugTracker2020.Controllers
     //GET: MyTickets
     public async Task<IActionResult> MyTickets()
     {
+      TempData["InTicketsPage"] = true;
       var userId = _userManager.GetUserId(User); // Get the currently logged in user.
       var roleList = await _rolesService.ListUserRoles(_context.Users.Find(userId));
       var role = roleList.FirstOrDefault();
@@ -113,6 +115,7 @@ namespace BugTracker2020.Controllers
     // GET: Tickets/Details/5
     public async Task<IActionResult> Details(int? id)
     {
+      TempData["InTicketsPage"] = true;
       if (id == null)
       {
         return NotFound();
@@ -138,17 +141,45 @@ namespace BugTracker2020.Controllers
     }
 
     // GET: Tickets/Create
-    public IActionResult Create()
+    public async Task<IActionResult> Create(int? id)
     {
-      // Limit who can see what and send hiddens
-      ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");
-      ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "FullName");
-      // For the project id, seed an empty project and just pass the id of 1 so the pm can reassign later
-      ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
-      ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
-      ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
-      ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
-      return View();
+      TempData["InTicketsPage"] = true;
+      if (id != null)
+      {
+        // Instanciate a new ticket and set the project id there
+        ViewData["ProjectIdGET"] = id.Value;
+        var model = new Ticket();
+        model.ProjectId = id.Value;
+        model.Project = _context.Projects.Find(id.Value);
+        var users = _context.Users.ToList();
+        var developers = new List<BTUser>();
+        foreach (var developer in users)
+        {
+          if (await _rolesService.IsUserInRole(developer, "Developer"))
+          {
+            developers.Add(developer);
+          }
+        }
+        if (User.IsInRole("Admin") || User.IsInRole("ProjectManager"))
+        {
+          ViewData["DeveloperUserId"] = new SelectList(developers, "Id", "FullName");
+          ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
+          ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
+          ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
+        }
+        if (User.IsInRole("Developer"))
+        {
+          ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
+          ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
+          ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
+        }
+        if (User.IsInRole("Submitter"))
+        {
+          ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
+        }
+        return View(model);
+      }
+      return RedirectToAction("Index", "Projects");
     }
 
     // POST: Tickets/Create
@@ -156,7 +187,7 @@ namespace BugTracker2020.Controllers
     // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,DeveloperUserId")] Ticket ticket, List<IFormFile> attachments)
+    public async Task<IActionResult> Create([Bind("Title,Description,ProjectId,TicketTypeId,TicketPriorityId,TicketStatusId,OwnerUserId,DeveloperUserId")] Ticket ticket, List<IFormFile> attachments)
     {
       if (ModelState.IsValid)
       {
@@ -171,13 +202,19 @@ namespace BugTracker2020.Controllers
             foreach (var attachment in attachments)
             {
               AttachmentHandler attachmentHandler = new AttachmentHandler();
-              ticket.Attachments.Add(attachmentHandler.Attach(attachment, ticket.Id));
+              ticket.Attachments.Add(attachmentHandler.AttachToTicket(attachment, ticket.Id));
             }
+          }
+          if (User.IsInRole("Submitter"))
+          {
+            ticket.TicketTypeId = 1;
+            ticket.TicketStatusId = 1;
           }
           _context.Add(ticket);
           await _context.SaveChangesAsync();
           return RedirectToAction(nameof(Index));
-        } else
+        }
+        else
         {
           // Handle tempdata["DemoLockout"]
           TempData["DemoLockout"] = "Your changes have not been saved. You must be logged in as a full user.";
@@ -211,7 +248,24 @@ namespace BugTracker2020.Controllers
         {
           return NotFound();
         }
-        ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName", ticket.DeveloperUserId);
+        var users = _context.Users.ToList();
+        var developers = new List<BTUser>();
+        foreach(var developer in users)
+        {
+          if(await _rolesService.IsUserInRole(developer, "Developer"))
+          {
+            developers.Add(developer);
+          }
+        }
+        if (User.IsInRole("Developer"))
+        {
+          ticket.DeveloperUserId = userId;
+        }
+        if (User.IsInRole("Submitter"))
+        {
+          ticket.DeveloperUserId = _context.Tickets.Find(id.Value).DeveloperUserId;
+        }
+        ViewData["DeveloperUserId"] = new SelectList(developers, "Id", "FullName", ticket.DeveloperUserId);
         //ViewData["OwnerUserId"] = new SelectList(_context.Users, "Id", "Id", ticket.OwnerUserId);
         //ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
         ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name", ticket.TicketPriorityId);
@@ -236,6 +290,12 @@ namespace BugTracker2020.Controllers
       }
       // Get snapshot of old ticket
       Ticket oldTicket = await _context.Tickets
+        .Include(t => t.TicketPriority)
+        .Include(t => t.TicketStatus)
+        .Include(t => t.TicketType)
+        .Include(t => t.DeveloperUser)
+        .Include(t => t.Project)
+        .Include(t => t.OwnerUser)
         .AsNoTracking()
         .FirstOrDefaultAsync(t => t.Id == ticket.Id);
 
@@ -261,6 +321,12 @@ namespace BugTracker2020.Controllers
         }
         // Get snapshot of new ticket
         Ticket newTicket = await _context.Tickets
+          .Include(t => t.TicketPriority)
+          .Include(t => t.TicketStatus)
+          .Include(t => t.TicketType)
+          .Include(t => t.DeveloperUser)
+          .Include(t => t.Project)
+          .Include(t => t.OwnerUser)
           .AsNoTracking()
           .FirstOrDefaultAsync(t => t.Id == ticket.Id);
         // Get Current UserId
@@ -316,6 +382,12 @@ namespace BugTracker2020.Controllers
     private bool TicketExists(int id)
     {
       return _context.Tickets.Any(e => e.Id == id);
+    }
+
+    public async Task<FileResult> DownloadFile(int? id)
+    {
+      TicketAttachment attachment = await _context.TicketAttachments.FindAsync(id.Value);
+      return File(attachment.FileData,attachment.ContentType);
     }
   }
 }

@@ -1,378 +1,221 @@
 ﻿<!DOCTYPE html>
+
 <html lang="en">
+<!--begin::Head-->
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@ViewData["Title"]</title>
-  <link href="~/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="//fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-  @*<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.22/css/jquery.dataTables.css">*@
-  <link rel="stylesheet" href="//cdn.datatables.net/1.10.22/css/dataTables.bootstrap4.min.css">
-  <!-- Custom styles for this template-->
-  <link href="~/css/sb-admin-2.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="~/css/site.css" />
+  <meta name="description" content="Updates and statistics" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <!--begin::Fonts-->
+  <link rel="stylesheet"
+        href="//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+
+  <!--end::Fonts-->
+  <!--begin::Page Vendors Styles(used by this page)-->
+  <link href="~/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css"
+        rel="stylesheet"
+        type="text/css" />
+
+  <!--end::Page Vendors Styles-->
+  <!--begin::Global Theme Styles(used by all pages)-->
+  <link href="~/assets/plugins/global/plugins.bundle.css"
+        rel="stylesheet"
+        type="text/css" />
+  <link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
+  <link href="~/assets/plugins/custom/prismjs/prismjs.bundle.css"
+        rel="stylesheet"
+        type="text/css" />
+  <link href="~/css/style.bundle.css" rel="stylesheet" type="text/css" />
+  <link href="~/css/pages/login/classic/login-3.css" rel="stylesheet" type="text/css" />
+
+
+  <!--end::Global Theme Styles-->
+  <!--begin::Layout Themes(used by all pages)-->
+  <!--end::Layout Themes-->
+  <link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
+  <link href="~/css/site.css" rel="stylesheet" />
 </head>
-<body id="page-top">
-  <div id="wrapper">
-    @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("Developer") || User.IsInRole("Submitter") || User.IsInRole("NewUser"))
-    {
-      <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion toggled"
-          id="accordionSidebar">
-        <!-- Sidebar - Brand -->
-        <a class="sidebar-brand d-flex align-items-center justify-content-center"
-           asp-area="" asp-controller="Home" asp-action="Index">
-          <div class="sidebar-brand-icon">
-            <i class="fas fa-clock"></i>
-          </div>
-          <div class="sidebar-brand-text mx-3">Clockwork</div>
-        </a>
 
-        <!-- Divider -->
-        <hr class="sidebar-divider my-0" />
-
-        <!-- Nav Item - Dashboard -->
-        <li class="nav-item active">
-          <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Dashboard</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <!-- Nav Item - Users -->
-        <li class="nav-item active">
-          <a class="nav-link" asp-area="" asp-controller="ManageUserRoles" asp-action="SetRoles">
-            <i class="fas fa-fw fa-user"></i>
-            <span>User Roles</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <!-- Nav Item - Users -->
-        <li class="nav-item active">
-          <a class="nav-link" asp-area="" asp-controller="Projects" asp-action="ManageProjectUsers">
-            <i class="fas fa-fw fa-project-diagram"></i>
-            <span>User Projects</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <!-- Nav Item - Projects -->
-        <li class="nav-item active">
-          <a class="nav-link" asp-area="" asp-controller="Projects" asp-action="Index">
-            <i class="fas fa-fw fa-tasks"></i>
-            <span>Projects</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <!-- Nav Item - Tickets -->
-        <li class="nav-item active">
-          <a class="nav-link" asp-area="" asp-controller="Tickets" asp-action="Index">
-            <i class="fas fa-fw fa-ticket-alt"></i>
-            <span>Tickets</span>
-          </a>
-        </li>
-
-        <!-- Divider -->
-        <hr class="sidebar-divider" />
-
-        <!-- Sidebar Toggler (Sidebar) -->
-        <div class="text-center d-none d-md-inline">
-          <button class="rounded-circle border-0" id="sidebarToggle"></button>
-        </div>
-
-        <!-- Sidebar Message -->
-        @*<div class="sidebar-card">
-            <img class="sidebar-card-illustration mb-2"
-                 src="img/undraw_rocket.svg"
-                 alt="" />
-            <p class="text-center mb-2">
-              <strong>SB Admin Pro</strong> is packed with premium features,
-              components, and more!
-            </p>
-            <a class="btn btn-success btn-sm"
-               href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to Pro!</a>
-          </div>*@
-      </ul>
-    }
-    <!-- End of Sidebar -->
-
-    <div class="d-flex flex-column" id="content-wrapper">
-      <main role="main" id="content">
-        @if (User.IsInRole("Admin") || User.IsInRole("ProjectManager") || User.IsInRole("Developer") || User.IsInRole("Submitter") || User.IsInRole("NewUser"))
-        {
-          <nav class="navbar navbar-expand navbar-light bg-gradient-dark topbar static-top shadow">
-            <!-- Sidebar Toggle (Topbar) -->
-            <button id="sidebarToggleTop"
-                    class="btn btn-dark d-md-none rounded-circle mr-3">
-              <i class="fa fa-bars"></i>
-            </button>
-
-            <!-- Topbar Search -->
-            <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-              <div class="input-group">
-                <input type="text"
-                       class="form-control bg-light border-0 small"
-                       placeholder="Search for..."
-                       aria-label="Search"
-                       aria-describedby="basic-addon2" />
-                <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                  </button>
-                </div>
-              </div>
-            </form>
-
-            <!-- Topbar Navbar -->
-            <ul class="navbar-nav ml-auto">
-              <!-- Nav Item - Search Dropdown (Visible Only XS) -->
-              <li class="nav-item dropdown no-arrow d-sm-none">
-                <a class="nav-link dropdown-toggle"
-                   href="#"
-                   id="searchDropdown"
-                   role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true"
-                   aria-expanded="false">
-                  <i class="fas fa-search fa-fw"></i>
-                </a>
-                <!-- Dropdown - Messages -->
-                <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                     aria-labelledby="searchDropdown">
-                  <form class="form-inline mr-auto w-100 navbar-search">
-                    <div class="input-group">
-                      <input type="text"
-                             class="form-control bg-light border-0 small"
-                             placeholder="Search for..."
-                             aria-label="Search"
-                             aria-describedby="basic-addon2" />
-                      <div class="input-group-append">
-                        <button class="btn btn-primary" type="button">
-                          <i class="fas fa-search fa-sm"></i>
-                        </button>
-                      </div>
-                    </div>
-                  </form>
-                </div>
-              </li>
-
-              <!-- Nav Item - Alerts -->
-              <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle"
-                   href="#"
-                   id="alertsDropdown"
-                   role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true"
-                   aria-expanded="false">
-                  <i class="fas fa-bell fa-fw"></i>
-                  <!-- Counter - Alerts -->
-                  <span class="badge badge-danger badge-counter">3+</span>
-                </a>
-                <!-- Dropdown - Alerts -->
-                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                     aria-labelledby="alertsDropdown">
-                  <h6 class="dropdown-header">Alerts Center</h6>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                      <div class="icon-circle bg-primary">
-                        <i class="fas fa-file-alt text-white"></i>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="small text-gray-500">December 12, 2019</div>
-                      <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                    </div>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                      <div class="icon-circle bg-success">
-                        <i class="fas fa-donate text-white"></i>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="small text-gray-500">December 7, 2019</div>
-                      $290.29 has been deposited into your account!
-                    </div>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="mr-3">
-                      <div class="icon-circle bg-warning">
-                        <i class="fas fa-exclamation-triangle text-white"></i>
-                      </div>
-                    </div>
-                    <div>
-                      <div class="small text-gray-500">December 2, 2019</div>
-                      Spending Alert: We've noticed unusually high spending for
-                      your account.
-                    </div>
-                  </a>
-                  <a class="dropdown-item text-center small text-gray-500"
-                     href="#">Show All Alerts</a>
-                </div>
-              </li>
-
-              <!-- Nav Item - Messages -->
-              <li class="nav-item dropdown no-arrow mx-1">
-                <a class="nav-link dropdown-toggle"
-                   href="#"
-                   id="messagesDropdown"
-                   role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true"
-                   aria-expanded="false">
-                  <i class="fas fa-envelope fa-fw"></i>
-                  <!-- Counter - Messages -->
-                  <span class="badge badge-danger badge-counter">7</span>
-                </a>
-                <!-- Dropdown - Messages -->
-                <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                     aria-labelledby="messagesDropdown">
-                  <h6 class="dropdown-header">Message Center</h6>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="dropdown-list-image mr-3">
-                      <img class="rounded-circle"
-                           src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                           alt="" />
-                      <div class="status-indicator bg-success"></div>
-                    </div>
-                    <div class="font-weight-bold">
-                      <div class="text-truncate">
-                        Hi there! I am wondering if you can help me with a
-                        problem I've been having.
-                      </div>
-                      <div class="small text-gray-500">Emily Fowler · 58m</div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="dropdown-list-image mr-3">
-                      <img class="rounded-circle"
-                           src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                           alt="" />
-                      <div class="status-indicator"></div>
-                    </div>
-                    <div>
-                      <div class="text-truncate">
-                        I have the photos that you ordered last month, how would
-                        you like them sent to you?
-                      </div>
-                      <div class="small text-gray-500">Jae Chun · 1d</div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="dropdown-list-image mr-3">
-                      <img class="rounded-circle"
-                           src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                           alt="" />
-                      <div class="status-indicator bg-warning"></div>
-                    </div>
-                    <div>
-                      <div class="text-truncate">
-                        Last month's report looks great, I am very happy with
-                        the progress so far, keep up the good work!
-                      </div>
-                      <div class="small text-gray-500">Morgan Alvarez · 2d</div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item d-flex align-items-center" href="#">
-                    <div class="dropdown-list-image mr-3">
-                      <img class="rounded-circle"
-                           src="https://source.unsplash.com/Mv9hjnEUHR4/60x60"
-                           alt="" />
-                      <div class="status-indicator bg-success"></div>
-                    </div>
-                    <div>
-                      <div class="text-truncate">
-                        Am I a good boy? The reason I ask is because someone
-                        told me that people say this to all dogs, even if they
-                        aren't good...
-                      </div>
-                      <div class="small text-gray-500">
-                        Chicken the Dog · 2w
-                      </div>
-                    </div>
-                  </a>
-                  <a class="dropdown-item text-center small text-gray-500"
-                     href="#">Read More Messages</a>
-                </div>
-              </li>
-
-              <div class="topbar-divider d-none d-sm-block"></div>
-
-              <!-- Nav Item - User Information -->
-              <li class="nav-item dropdown no-arrow">
-                <a class="nav-link dropdown-toggle"
-                   href="#"
-                   id="userDropdown"
-                   role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true"
-                   aria-expanded="false">
-                  <span class="mr-2 d-none d-lg-inline text-gray-600 small"></span>
-                  <img class="img-profile rounded-circle"
-                       src="~/img/undraw_profile.svg" />
-                </a>
-                <!-- Dropdown - User Information -->
-                <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                     aria-labelledby="userDropdown">
-                  <partial name="_LoginPartial" />
-                  <a class="dropdown-item" href="#">
-                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Profile
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Settings
-                  </a>
-                  <a class="dropdown-item" href="#">
-                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                    Activity Log
-                  </a>
-                </div>
-              </li>
-            </ul>
-          </nav>
-        }
-        <!-- End of Topbar -->
-        <div class="container-fluid m-0 p-0 bg-dark" id="sharedBackground">
-          @RenderBody()
-        </div>
-      </main>
-
-      <!-- Footer -->
-      <footer class="sticky-footer bg-gradient-dark">
-        <div class="container my-auto">
-          <div class="copyright text-center text-gray-200 my-auto">
-            <span>Copyright &copy; Denis Jojot</span>
-          </div>
-        </div>
-      </footer>
-      <!-- End of Footer -->
-    </div>
+<!--end::Head-->
+<!--begin::Body-->
+<body id="kt_body" class="header-fixed">
+  <!--begin::Page loader-->
+  <div class="page-loader">
+    <div class="spinner spinner-primary"></div>
   </div>
-  <script src="~/lib/jquery/dist/jquery.min.js"></script>
-  <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
-  <script src="//cdn.datatables.net/1.10.22/js/dataTables.bootstrap4.min.js"></script>
-  <script src="~/vendor/jquery-easing/jquery.easing.js"></script>
-  <script src="~/js/sb-admin-2.min.js"></script>
-  <script src="~/vendor/chart.js/Chart.js"></script>
-  <script src="~/js/site.js" asp-append-version="true"></script>
+  <!--end::Page Loader-->
+  <!--begin::Main-->
+  <div class="d-flex flex-column flex-root">
+    <!--begin::Page-->
+    <div class="d-flex flex-row flex-column-fluid page">
+      <!--begin::Wrapper-->
+      <div class="d-flex flex-column flex-row-fluid wrapper" id="kt_wrapper">
+        @if (User.Identity.IsAuthenticated)
+        {
+          <!-- mobilePartial goes here -->
+          <partial name="_MobileHeaderPartial" />
+          <!-- headerPartial goes here -->
+          <partial name="_HeaderPartial" />
+          <!-- headerMenuPartial goes here -->
+          <partial name="_HeaderMenuPartial" />
+        }
+        <!-- begin::CONTENT CONTAINER -->
+        <div class="d-flex flex-row flex-column-fluid container">
+          <!--begin::Content Wrapper-->
+          <div class="main d-flex flex-column flex-row-fluid">
+            <!-- renderBody goes here -->
+            @RenderBody()
+          </div>
+          <!--end::Content Wrapper-->
+        </div>
+        <!--end::CONTENT CONTAINER -->
+        @if (User.Identity.IsAuthenticated)
+        {
+          <!--begin::Footer-->
+          <div class="footer py-4 d-flex flex-lg-column" id="kt_footer">
+            <!--begin::Container-->
+            <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
+              <!--begin::Copyright-->
+              <div class="text-dark order-2 order-md-1">
+                <span class="text-muted font-weight-bold mr-2">2020©</span>
+                <a href="//denisjojot.com"
+                   target="_blank"
+                   class="text-white text-hover-primary">Denis Jojot</a>
+              </div>
+              <!--end::Copyright-->
+              <!--begin::Nav-->
+              <div class="nav nav-dark order-1 order-md-2">
+                <span class="nav-link">Props to &nbsp;<a href="//keenthemes.com/metronic" target="_blank" class="text-white text-hover-primary">Metronic</a></span>
+              </div>
+              <!--end::Nav-->
+            </div>
+            <!--end::Container-->
+          </div>
+          <!--end::Footer-->
+        }
+      </div>
+      <!--end::Wrapper-->
+    </div>
+    <!--end::Page-->
+  </div>
+  <!--end::Main-->
+  <!--begin::Scrolltop-->
+  <div id="kt_scrolltop" class="scrolltop">
+    <span class="svg-icon">
+      @*begin::Svg Icon | path:assets/media/svg/icons/Navigation/Up-2.svg*@
+      <svg xmlns="http://www.w3.org/2000/svg"
+           xmlns:xlink="http://www.w3.org/1999/xlink"
+           width="24px"
+           height="24px"
+           viewBox="0 0 24 24"
+           version="1.1">
+        <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+          <polygon points="0 0 24 0 24 24 0 24" />
+          <rect fill="#000000"
+                opacity="0.3"
+                x="11"
+                y="10"
+                width="2"
+                height="10"
+                rx="1" />
+          <path d="M6.70710678,12.7071068 C6.31658249,13.0976311 5.68341751,13.0976311 5.29289322,12.7071068 C4.90236893,12.3165825 4.90236893,11.6834175 5.29289322,11.2928932 L11.2928932,5.29289322 C11.6714722,4.91431428 12.2810586,4.90106866 12.6757246,5.26284586 L18.6757246,10.7628459 C19.0828436,11.1360383 19.1103465,11.7686056 18.7371541,12.1757246 C18.3639617,12.5828436 17.7313944,12.6103465 17.3242754,12.2371541 L12.0300757,7.38413782 L6.70710678,12.7071068 Z"
+                fill="#000000"
+                fill-rule="nonzero" />
+        </g>
+      </svg>
+      @*end::Svg Icon*@
+    </span>
+  </div>
+  <!--end::Scrolltop-->
+  <!--begin::Global Config(global config for global JS scripts)-->
   <script>
-      //$(document).ready(function () {
-      //  $('.table').datatable();
-      //});
+    var KTAppSettings = {
+      breakpoints: {
+        sm: 576,
+        md: 768,
+        lg: 992,
+        xl: 1200,
+        xxl: 1200,
+      },
+      colors: {
+        theme: {
+          base: {
+            white: "#ffffff",
+            primary: "#8950FC",
+            secondary: "#E5EAEE",
+            success: "#1BC5BD",
+            info: "#6993FF",
+            warning: "#FFA800",
+            danger: "#F64E60",
+            light: "#F3F6F9",
+            dark: "#212121",
+          },
+          light: {
+            white: "#ffffff",
+            primary: "#EEE5FF",
+            secondary: "#ECF0F3",
+            success: "#C9F7F5",
+            info: "#E1E9FF",
+            warning: "#FFF4DE",
+            danger: "#FFE2E5",
+            light: "#F3F6F9",
+            dark: "#D6D6E0",
+          },
+          inverse: {
+            white: "#ffffff",
+            primary: "#ffffff",
+            secondary: "#212121",
+            success: "#ffffff",
+            info: "#ffffff",
+            warning: "#ffffff",
+            danger: "#ffffff",
+            light: "#464E5F",
+            dark: "#ffffff",
+          },
+        },
+        gray: {
+          "gray-100": "#F3F6F9",
+          "gray-200": "#ECF0F3",
+          "gray-300": "#E5EAEE",
+          "gray-400": "#D6D6E0",
+          "gray-500": "#B5B5C3",
+          "gray-600": "#80808F",
+          "gray-700": "#464E5F",
+          "gray-800": "#1B283F",
+          "gray-900": "#212121",
+        },
+      },
+      "font-family": "Poppins",
+    };
+  </script>
+
+  <!--end::Global Config-->
+  <!--begin::Global Theme Bundle(used by all pages)-->
+  <script src="~/assets/plugins/global/plugins.bundle.js"></script>
+  <script src="~/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
+  <script src="~/assets/js/scripts.bundle.js"></script>
+
+  <!--end::Global Theme Bundle-->
+  <!--begin::Page Vendors(used by this page)-->
+  <script src="~/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
+  <script src="assets/plugins/custom/flot/flot.bundle.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
+  <!--end::Page Vendors-->
+  <!--begin::Page Scripts(used by this page)-->
+  <script src="~/assets/js/pages/widgets.js"></script>
+  <script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+
+  <script>
+    $(document).ready(function () {
+      $('.table').DataTable({
+        responsive: true
+      });
+    });
   </script>
   @if (TempData["DemoLockout"] != null)
   {
@@ -380,6 +223,50 @@
       $('#demoRoleWarning').addClass('d-block');
     </script>
   }
+
+  @if (TempData["InHomeIndex"] != null)
+  {
+    <script>
+
+      $('.menu-item').removeClass('menu-item-here');
+      $('#dashboard').addClass('menu-item-here');
+
+    </script>
+  }
+
+  @if (TempData["InSetRolesPage"] != null)
+  {
+    <script>
+      $('.menu-item').removeClass('menu-item-here');
+      $('#userRoles').addClass('menu-item-here');
+    </script>
+  }
+
+  @if (TempData["InUserAssignmentsPage"] != null)
+  {
+    <script>
+      $('.menu-item').removeClass('menu-item-here');
+      $('#userAssignments').addClass('menu-item-here');
+    </script>
+  }
+
+  @if (TempData["InProjectsPage"] != null)
+  {
+    <script>
+      $('.menu-item').removeClass('menu-item-here');
+      $('#projects').addClass('menu-item-here');
+    </script>
+  }
+
+  @if (TempData["InTicketsPage"] != null)
+  {
+    <script>
+      $('.menu-item').removeClass('menu-item-here');
+      $('#tickets').addClass('menu-item-here');
+    </script>
+  }
+  <!--end::Page Scripts-->
   @RenderSection("Scripts", required: false)
 </body>
+<!--end::Body-->
 </html>

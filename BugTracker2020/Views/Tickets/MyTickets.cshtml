@@ -5,32 +5,39 @@
 @inject IBTAccessService AccessService
 
 @{
-  ViewData["Title"] = "My Tickets";
+  ViewData["Title"] = "Tickets Index";
   var userId = UserManager.GetUserId(User);
   var roleName = (await UserManager.GetRolesAsync(await UserManager.GetUserAsync(User))).FirstOrDefault();
   //var user = await UserManager.GetUserAsync(User);
   //var roleName2 = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
   //string userId2 = user.Id;
 }
-<div class="pt-3 px-3">
-  <h1 class="text-center border-bottom-light rounded text-gray-200">My Tickets</h1>
-  <div class="table-responsive-xxl">
-    @if (TempData["Naughty"] != null)
-    {
-      <h3>@TempData["Naughty"]</h3>
-    }
-
-    <p>
-      <a asp-action="Create" class="btn btn-dark border mt-2">Create New</a>
-    </p>
-    <table class="table table-fixed table-dark table-bordered rounded">
-      <thead class="bg-gradient-dark text-gray-200">
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+  <div class="alert alert-warning alert-dismissible show d-none fade" id="demoRoleWarning" role="alert">
+    <strong>Holy smokes!</strong> You're not logged in with a role that can make changes.
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="d-flex justify-content-between">
+    <div>
+      <h1>My Tickets</h1>
+      <p>Here you'll find a list of all tickets for the projects you are assigned to.</p>
+    </div>
+    <div class="pt-5">
+      @if (TempData["Naughty"] != null)
+      {
+        <h3>@TempData["Naughty"]</h3>
+      }
+      <a asp-action="Index" class="btn btn-dark border">Back to All Tickets</a>
+    </div>
+  </div>
+  <div class="bg-dark-o-80 p-3 shadow-lg border border-dark border-2 rounded mt-5">
+    <table class="table text-center shadow bg-white-o-20">
+      <thead class="bg-dark">
         <tr>
           <th>
             @Html.DisplayNameFor(model => model.Title)
-          </th>
-          <th>
-            @Html.DisplayNameFor(model => model.Description)
           </th>
           <th>
             @Html.DisplayNameFor(model => model.Created)
@@ -51,81 +58,47 @@
             Ticket Status
           </th>
           <th>
-            Submitted By
-          </th>
-          <th>
-            Assigned Developer
-          </th>
-          <th>
             Actions
           </th>
         </tr>
       </thead>
       <tbody>
-        @if (Model.Any() == false)
+        @foreach (var item in Model)
         {
           <tr>
-            <td>No Tickets Assigned</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Updated)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.Project.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.TicketType.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.TicketPriority.Name)
+            </td>
+            <td>
+              @Html.DisplayFor(modelItem => item.TicketStatus.Name)
+            </td>
+            <td>
+              @{ var dataTarget = item.Title.Replace(" ", "_"); }
+              @if (await AccessService.CanAccessTicket(userId, item.Id, roleName))
+              {
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
+              }
+            </td>
           </tr>
-        }
-        else
-        {
-          @foreach (var item in Model)
-          {
-            <tr>
-              <td>
-                @Html.DisplayFor(modelItem => item.Title)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.Description)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.Created)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.Updated)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.Project.Name)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.TicketType.Name)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.TicketPriority.Name)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.TicketStatus.Name)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.OwnerUser.FullName)
-              </td>
-              <td>
-                @Html.DisplayFor(modelItem => item.DeveloperUser.FullName)
-              </td>
-              <td>
-                @if (await AccessService.CanAccessTicket(userId, item.Id, roleName))
-                {
-                  <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-dark border">Edit</a>
-                  <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-dark border">Details</a>
-                  <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-dark border">Delete</a>
-                }
-              </td>
-            </tr>
-          }
         }
       </tbody>
     </table>
-    <a asp-action="Index" class="btn btn-dark border">Back to All Tickets</a>
   </div>
 </div>

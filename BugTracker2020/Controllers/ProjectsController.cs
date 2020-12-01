@@ -11,6 +11,8 @@ using BugTracker2020.Models.ViewModels;
 using BugTracker2020.Services;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
+using BugTracker2020.Utilities;
 
 namespace BugTracker2020.Controllers
 {
@@ -32,6 +34,7 @@ namespace BugTracker2020.Controllers
     // GET: Projects
     public async Task<IActionResult> Index()
     {
+      TempData["InProjectsPage"] = true;
       var projects = await _context.Projects
         .Include(p => p.ProjectUsers)
         .ThenInclude(p => p.User)
@@ -39,9 +42,10 @@ namespace BugTracker2020.Controllers
       return View(projects);
     }
 
-    // GET: MyTickets
+    // GET: MyProjects
     public async Task<IActionResult> MyProjects()
     {
+      TempData["InProjectsPage"] = true;
       var userId = _userManager.GetUserId(User); // Get the currently logged in user.
       var roleList = await _rolesService.ListUserRoles(_context.Users.Find(userId));
       var role = roleList.FirstOrDefault();
@@ -73,7 +77,7 @@ namespace BugTracker2020.Controllers
         case "Developer":
           model = new List<Project>();
           var devProjectIds = new List<int>();
-          var devProjects = _context.ProjectUsers.Where(pu => pu.UserId == userId);
+          var devProjects = _context.ProjectUsers.Where(pu => pu.UserId == userId).ToList();
           foreach (var record in devProjects)
           {
             devProjectIds.Add(_context.Projects.Find(record.ProjectId).Id);
@@ -112,10 +116,13 @@ namespace BugTracker2020.Controllers
     // GET: Projects/Details/5
     public async Task<IActionResult> Details(int? id)
     {
+      TempData["InProjectsPage"] = true;
       if (id == null)
       {
         return NotFound();
       }
+
+      var vm = new ProjectTicketsViewModel();
 
       var project = await _context.Projects
         .Include(p => p.ProjectUsers)
@@ -126,7 +133,17 @@ namespace BugTracker2020.Controllers
         return NotFound();
       }
 
-      return View(project);
+      var tickets = await _context.Tickets
+        .Include(t=>t.TicketPriority)
+        .Include(t=>t.TicketStatus)
+        .Include(t=>t.TicketType)
+        .Include(t=>t.Attachments)
+        .Include(t=>t.Histories)
+        .Where(t => t.ProjectId == id.Value)
+        .ToListAsync();
+      vm.Project = project;
+      vm.Tickets = tickets;
+      return View(vm);
     }
 
     // GET: Projects/Create
@@ -140,20 +157,24 @@ namespace BugTracker2020.Controllers
     // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Id,Name,ImagePath,ImageData")] Project project)
+    public async Task<IActionResult> Create([Bind("Name")] string projectName, IFormFile projectImage)
     {
       if (ModelState.IsValid)
       {
+        var attachmentHandler = new AttachmentHandler();
+        var project = attachmentHandler.AttachToProject(projectImage);
+        project.Name = projectName;
         _context.Add(project);
         await _context.SaveChangesAsync();
         return RedirectToAction(nameof(Index));
       }
-      return View(project);
+      return View();
     }
 
     // GET: Projects/Edit/5
     public async Task<IActionResult> Edit(int? id)
     {
+      TempData["InProjectsPage"] = true;
       if (id == null)
       {
         return NotFound();
@@ -172,23 +193,23 @@ namespace BugTracker2020.Controllers
     // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("Id,Name,ImagePath,ImageData")] Project project)
+    public async Task<IActionResult> Edit(int id, string projectName, IFormFile projectImage)
     {
-      if (id != project.Id)
-      {
-        return NotFound();
-      }
 
       if (ModelState.IsValid)
       {
         try
         {
+          var attachmentHandler = new AttachmentHandler();
+          var project = attachmentHandler.AttachToProject(projectImage);
+          project.Name = projectName;
+          project.Id = id;
           _context.Update(project);
           await _context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
         {
-          if (!ProjectExists(project.Id))
+          if (!ProjectExists(id))
           {
             return NotFound();
           }
@@ -199,7 +220,7 @@ namespace BugTracker2020.Controllers
         }
         return RedirectToAction(nameof(Index));
       }
-      return View(project);
+      return View();
     }
 
     // GET: Projects/Delete/5
@@ -250,6 +271,9 @@ namespace BugTracker2020.Controllers
       //// Set our Users property on the vm
       //model.Users = new MultiSelectList(users, "Id", "FullName", members);
       //// send the vm to the view
+      ///
+
+      TempData["InUserAssignmentsPage"] = true;
 
       // New Version - Display a list of users
       // For each user display a list of projects
@@ -263,12 +287,15 @@ namespace BugTracker2020.Controllers
       foreach (var user in users)
       {
         var vm = new ManageProjectUsersViewModel();
-        vm.User = user;
-        vm.UserRole = await _rolesService.ListUserRoles(user);
-        vm.CurrentProjects = await _projectService.ListUserProjects(user.Id);
-        var projects = await _context.Projects.ToListAsync();
-        vm.Projects = new SelectList(projects, "Id", "Name");
-        model.Add(vm);
+        if (!await _rolesService.IsUserInRole(user, "Demo"))
+        {
+          vm.User = user;
+          vm.UserRole = await _rolesService.ListUserRoles(user);
+          vm.CurrentProjects = await _projectService.ListUserProjects(user.Id);
+          var projects = await _context.Projects.ToListAsync();
+          vm.Projects = new SelectList(projects, "Id", "Name");
+          model.Add(vm);
+        }
       }
 
 

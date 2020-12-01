@@ -3,70 +3,125 @@
 
 @{
   ViewData["Title"] = "Log in";
+  Layout = null;
 }
 
 
-<div class="row" id="login">
-  <div class="col">
-    <section id="login-form" class="mx-auto">
-      <form id="account" method="post">
-        <h1 class="text-center">ClockWork <i class="fas fa-clock"></i></h1>
-        <h4 class="text-center">Use a local account to log in.</h4>
-        <hr />
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group">
-          <label asp-for="Input.Email"></label>
-          <input asp-for="Input.Email" class="form-control" />
-          <span asp-validation-for="Input.Email" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-          <label asp-for="Input.Password"></label>
-          <input asp-for="Input.Password" class="form-control" />
-          <span asp-validation-for="Input.Password" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-          <div class="checkbox">
-            <label asp-for="Input.RememberMe">
-              <input asp-for="Input.RememberMe" />
-              @Html.DisplayNameFor(m => m.Input.RememberMe)
-            </label>
+<!DOCTYPE html>
+<!--
+Template Name: Metronic - Bootstrap 4 HTML, React, Angular 10 & VueJS Admin Dashboard Theme
+Author: KeenThemes
+Website: http://www.keenthemes.com/
+Contact: support@keenthemes.com
+Follow: www.twitter.com/keenthemes
+Dribbble: www.dribbble.com/keenthemes
+Like: www.facebook.com/keenthemes
+Purchase: https://1.envato.market/EA4JP
+Renew Support: https://1.envato.market/EA4JP
+License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
+-->
+<html lang="en">
+<!--begin::Head-->
+<head>
+  <base href="../../../../">
+  <meta charset="utf-8" />
+  <title>Sign In | Metronic</title>
+  <meta name="description" content="Singin page example" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <link rel="canonical" href="https://keenthemes.com/metronic" />
+  <!--begin::Fonts-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
+  <!--end::Fonts-->
+  <!--begin::Page Custom Styles(used by this page)-->
+  <link href="~/css/pages/login/login-3.css" rel="stylesheet" type="text/css" />
+  <!--end::Page Custom Styles-->
+  <!--begin::Global Theme Styles(used by all pages)-->
+  <link href="~/assets/plugins/global/plugins.bundle.css" rel="stylesheet" type="text/css" />
+  <link href="~/assets/plugins/custom/prismjs/prismjs.bundle.css" rel="stylesheet" type="text/css" />
+  <link href="~/css/style.bundle.css" rel="stylesheet" type="text/css" />
+  <!--end::Global Theme Styles-->
+  <!--begin::Layout Themes(used by all pages)-->
+  <!--end::Layout Themes-->
+  <link rel="shortcut icon" href="assets/media/logos/favicon.ico" />
+</head>
+<!--end::Head-->
+<!--begin::Body-->
+<body id="kt_body" class="header-fixed subheader-enabled page-loading">
+  <!--begin::Main-->
+  <div class="d-flex flex-column flex-root">
+
+    <!--begin::Login-->
+    <div class="login login-3 login-signin-on d-flex flex-row-fluid" id="kt_login">
+      <div class="d-flex flex-center bgi-size-cover bgi-no-repeat flex-row-fluid" style="background-image: url(/assets/media/bg/bg-1.jpg);">
+        <div class="login-form text-center text-white p-7 position-relative overflow-hidden">
+          <!--begin::Login Header-->
+          <div class="d-flex flex-center mb-15">
+            <a href="#">
+              <img src="~/assets/media/logos/logo-letter-9.png" class="max-h-100px" alt="" />
+            </a>
+          </div>
+          <!--end::Login Header-->
+          <!--begin::Login Sign in form-->
+          <div class="login-signin">
+            <div class="mb-20">
+              <h3>Sign In To Metronic</h3>
+              <p class="opacity-60 font-weight-bold">Enter your details to login to your account:</p>
+            </div>
+            <form class="form" id="kt_login_signin_form" method="post">
+              <div asp-validation-summary="All" class="text-danger"></div>
+              <div class="form-group">
+                <input asp-for="Input.Email" class="form-control h-auto text-white placeholder-white opacity-70 bg-dark-o-70 rounded-pill border-0 py-4 px-8 mb-5" />
+              </div>
+              <div class="form-group">
+                <input asp-for="Input.Password" class="form-control h-auto text-white placeholder-white opacity-70 bg-dark-o-70 rounded-pill border-0 py-4 px-8 mb-5" />
+              </div>
+              <div class="form-group">
+                <div class="checkbox-inline">
+                  <label asp-for="Input.RememberMe" class="checkbox checkbox-outline checkbox-white text-white m-0">
+                    <input asp-for="Input.RememberMe" />
+                    <span></span>@Html.DisplayNameFor(m => m.Input.RememberMe)
+                  </label>
+                </div>
+              </div>
+              <div class="form-group">
+                <input type="submit" class="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-15 py-3" value="Log In" />
+              </div>
+              <div class="form-group">
+                <p>
+                  <a id="forgot-password" asp-page="./ForgotPassword" class="text-white font-weight-bold">Forgot your password?</a>
+                </p>
+                <p>
+                  <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl" class="text-white font-weight-bold">Register as a new user</a>
+                </p>
+              </div>
+            </form>
+            <div class="mt-10">
+              <span class="opacity-70 mr-4">Log in as a demo user <i class="fas fa-arrow-down"></i></span>
+            </div>
+          </div>
+          <!--end::Login Sign in form-->
+          <div class="w-50 mx-auto d-flex justify-content-around mt-3">
+
+            <form method="post">
+              <button type="submit" name="demoEmail" value="DemoAdminEmail" class="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-7 py-1 mr-1">Demo Admin</button>
+            </form>
+            <form method="post">
+              <button type="submit" name="demoEmail" value="DemoPMEmail" class="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-7 py-1">Demo PM</button>
+            </form>
+            <form method="post">
+              <button type="submit" name="demoEmail" value="DemoDevEmail" class="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-7 py-1 mx-1">Demo Dev</button>
+            </form>
+            <form method="post">
+              <button type="submit" name="demoEmail" value="DemoSubEmail" class="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-7 py-1">Demo Sub</button>
+            </form>
+            <form method="post">
+              <button type="submit" name="demoEmail" value="DemoNewUser" class="btn btn-pill btn-outline-white font-weight-bold opacity-90 px-7 py-1 ml-1">Demo New</button>
+            </form>
           </div>
         </div>
-        <div class="form-group">
-          <button type="submit" class="btn btn-primary">Log in</button>
-        </div>
-        <div class="form-group">
-          <p>
-            <a id="forgot-password" asp-page="./ForgotPassword">Forgot your password?</a>
-          </p>
-          <p>
-            <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Register as a new user</a>
-          </p>
-        </div>
-      </form>
-      <div class="w-50 mx-auto d-flex justify-content-around mt-3">
-
-          <form method="post">
-            <button type="submit" name="demoEmail" value="DemoAdminEmail" class="btn btn-dark border">Demo Admin</button>
-          </form>
-          <form method="post">
-            <button type="submit" name="demoEmail" value="DemoPMEmail" class="btn btn-dark border">Demo PM</button>
-          </form>
-          <form method="post">
-            <button type="submit" name="demoEmail" value="DemoDevEmail" class="btn btn-dark border">Demo Dev</button>
-          </form>
-          <form method="post">
-            <button type="submit" name="demoEmail" value="DemoSubEmail" class="btn btn-dark border">Demo Sub</button>
-          </form>
-          <form method="post">
-            <button type="submit" name="demoEmail" value="DemoNewUser" class="btn btn-dark border">Demo New</button>
-          </form>
-
       </div>
-    </section>
-  </div>
-</div>
-
-@section Scripts {
-  <partial name="_ValidationScriptsPartial" />
-}
+    </div>
+    <!--end::Login-->
+    </div>
+  </body>
+</html>

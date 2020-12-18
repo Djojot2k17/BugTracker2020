@@ -22,9 +22,9 @@
       {
         <a data-toggle="modal" data-target="#createProject" class="btn btn-dark border">Create New</a>
       }
-      @if (!User.IsInRole("Admin"))
+      @if (!User.IsInRole("Admin") && !User.IsInRole("Submitter"))
       {
-        <a asp-action="MyProjects" class="btn btn-outline-dark">My Projects</a>
+        <a asp-action="MyProjects" class="btn btn-dark border">My Projects</a>
       }
     </p>
   </div>

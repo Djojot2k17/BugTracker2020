@@ -5,8 +5,10 @@
 }
 
 <div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
-
-  <h2 class="text-center">Create Ticket for @Model.Project.Name</h2>
+  @if (!User.IsInRole("Submitter"))
+  {
+    <h2 class="text-center">Create Ticket for @Model.Project.Name</h2>
+  }
   <hr />
   <div class="d-flex justify-content-center align-items-center">
     <div class="rounded border border-2 border-white shadow-lg p-5 w-lg-50 w-100">
@@ -14,7 +16,10 @@
         <div class="col">
           <form asp-action="Create" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="ProjectId">
+            @if (!User.IsInRole("Submitter"))
+            {
+              <input type="hidden" asp-for="ProjectId">
+            }
             <div class="form-group">
               <input asp-for="Title" placeholder="Title" class="form-control bg-dark-o-100 text-white" />
               <span asp-validation-for="Title" class="text-danger"></span>
@@ -60,15 +65,23 @@
             @if (User.IsInRole("Submitter"))
             {
               <div class="form-group">
+                <label asp-for="ProjectId" class="control-label text-white">Which project is this ticket for?</label>
+                <select asp-for="ProjectId" class="form-control custom-select" asp-items="ViewBag.ProjectId"></select>
+              </div>
+              <div class="form-group">
                 <label asp-for="TicketPriorityId" class="control-label text-white">Of what priority will this ticket be?</label>
                 <select asp-for="TicketPriorityId" class="form-control custom-select" asp-items="ViewBag.TicketPriorityId"></select>
               </div>
+              <div class="form-group">
+                <label asp-for="DeveloperUserId" class="control-label text-white">Should anything go wrong, who will be to blame?</label>
+                <select asp-for="DeveloperUserId" class="form-control custom-select" asp-items="ViewBag.DeveloperUserId"></select>
+              </div>
             }
-          <label class="text-white">Ticket Attachment</label>
-          <div class="custom-file">
-            <input type="file" name="attachments" class="custom-file-input" id="customFile" multiple />
-            <label class="custom-file-label bg-dark-o-100 text-white" for="customFile">Choose file</label>
-          </div>
+            <label class="text-white">Ticket Attachment</label>
+            <div class="custom-file">
+              <input type="file" name="attachments" class="custom-file-input" id="customFile" multiple />
+              <label class="custom-file-label bg-dark-o-100 text-white" for="customFile">Choose file</label>
+            </div>
             <hr>
             <div class="form-group text-center">
               <input type="submit" value="Create" class="btn btn-outline-primary" />

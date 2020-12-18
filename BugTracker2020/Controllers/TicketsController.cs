@@ -173,13 +173,16 @@ namespace BugTracker2020.Controllers
           ViewData["TicketStatusId"] = new SelectList(_context.TicketStatuses, "Id", "Name");
           ViewData["TicketTypeId"] = new SelectList(_context.TicketTypes, "Id", "Name");
         }
-        if (User.IsInRole("Submitter"))
-        {
-          ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
-        }
+        
         return View(model);
       }
-      return RedirectToAction("Index", "Projects");
+      if (User.IsInRole("Submitter"))
+      {
+        ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
+        ViewData["TicketPriorityId"] = new SelectList(_context.TicketPriorities, "Id", "Name");
+        ViewData["DeveloperUserId"] = new SelectList(_context.Users, "Id", "FullName");
+      }
+      return View();
     }
 
     // POST: Tickets/Create

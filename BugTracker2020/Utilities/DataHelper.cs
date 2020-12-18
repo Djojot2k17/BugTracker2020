@@ -77,3 +77,10 @@ namespace BugTracker2020.Utilities
     }
   }
 }
+
+
+// Get required for inputs that are required
+// Put ticket histories on ticket details
+// Reseed tickets for demo users
+// Don't allow the admin to reassign himself as something other than admin.
+// Admin is the only role that can reassign users.

@@ -12,7 +12,7 @@
   //var roleName2 = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
   //string userId2 = user.Id;
 }
-<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); background-size: cover; border-top-left-radius: 0 !important;">
   <div class="alert alert-warning alert-dismissible show d-none fade" id="demoRoleWarning" role="alert">
     <strong>Holy smokes!</strong> You're not logged in with a role that can make changes.
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -32,8 +32,8 @@
       <a asp-action="Index" class="btn btn-dark border">Back to All Tickets</a>
     </div>
   </div>
-  <div class="bg-dark-o-80 p-3 shadow-lg border border-dark border-2 rounded mt-5">
-    <table class="table text-center shadow bg-white-o-20">
+  <div class="bg-dark-o-80 p-3 shadow-lg mt-5">
+    <table class="table text-center shadow bg-white-o-20 w-100 table-bordered">
       <thead class="bg-dark">
         <tr>
           <th>
@@ -91,8 +91,8 @@
               @{ var dataTarget = item.Title.Replace(" ", "_"); }
               @if (await AccessService.CanAccessTicket(userId, item.Id, roleName))
               {
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary">Edit</a>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary">Details</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-info">Edit</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-info">Details</a>
                 <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
               }
             </td>

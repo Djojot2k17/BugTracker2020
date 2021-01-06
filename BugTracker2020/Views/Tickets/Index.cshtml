@@ -12,7 +12,7 @@
   //var roleName2 = (await UserManager.GetRolesAsync(user)).FirstOrDefault();
   //string userId2 = user.Id;
 }
-<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); border-top-left-radius: 0 !important;">
+<div class="p-5 h-100 rounded text-white" style="background: url(/assets/media/bg/bg-2.jpg); background-size: cover; border-top-left-radius: 0 !important;">
   <div class="alert alert-warning alert-dismissible show d-none fade" id="demoRoleWarning" role="alert">
     <strong>Holy smokes!</strong> You're not logged in with a role that can make changes.
     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
@@ -30,12 +30,12 @@
     </div>
   </div>
   <hr>
-  <div class="bg-dark-o-80 p-3 shadow-lg border border-dark border-2 rounded">
+  <div class="bg-dark-o-80 p-3 shadow-lg">
     @if (TempData["Naughty"] != null)
     {
       <h3>@TempData["Naughty"]</h3>
     }
-    <table class="table text-center shadow bg-white-o-20">
+    <table class="table table-bordered text-center shadow bg-white-o-20 w-100">
       <thead class="bg-dark">
         <tr>
           <th>

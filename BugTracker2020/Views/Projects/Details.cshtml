@@ -14,7 +14,7 @@
   <h1 class="text-center">@Model.Project.Name</h1>
   <div class="row mb-3">
   </div>
-  <div class="rounded border border-2 border-white shadow-lg p-3">
+  <div class="rounded shadow-lg p-3">
     <div class="col d-flex justify-content-between">
       <div>
         <h4 class="pt-3">Tickets for @Model.Project.Name</h4>
@@ -25,7 +25,7 @@
         <div class="text-right">
           @if (await AccessService.CanAccessProject(userId, Model.Project.Id, roleName))
           {
-            <a asp-controller="Tickets" asp-action="Create" asp-route-id="@Model.Project.Id" class="btn btn-outline-primary mb-0">New Ticket</a>
+            <a asp-controller="Tickets" asp-action="Create" asp-route-id="@Model.Project.Id" class="btn btn-outline-info mb-0">New Ticket</a>
           }
         <div class="pt-2">To see more information click on the details of a ticket.</div>
         </div>
@@ -34,7 +34,7 @@
     <div class="row p-3">
       <div class="col">
         <hr class="bg-white-o-100" />
-        <table class="table text-center shadow bg-white-o-20">
+        <table class="table text-center shadow bg-white-o-20 w-100 table-bordered">
           <thead class="bg-dark">
             <tr>
               <th>Title</th>
@@ -93,7 +93,7 @@
     <hr class="bg-light">
     <div class="row p-3">
       <div class="col">
-        <h4>History Tracker</h4>
+        <p>History Tracker</p>
         @foreach (var ticket in Model.Tickets)
         {
           if (ticket.Histories.Count > 0)

@@ -50,7 +50,7 @@ namespace BugTracker2020.Controllers
       foreach (var user in users)
       {
         ManageUserRolesViewModel vm = new ManageUserRolesViewModel();
-        if (!await _BTRoles.IsUserInRole(user, "Demo"))
+        if (!await _BTRoles.IsUserInRole(user, "Demo") && !await _BTRoles.IsUserInRole(user, "Admin"))
         {
           vm.UserId = user.Id;
           vm.UserName = user.FullName;

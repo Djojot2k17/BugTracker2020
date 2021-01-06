@@ -9,33 +9,8 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
-  <!--begin::Fonts-->
-  <link rel="stylesheet"
-        href="//fonts.googleapis.com/css?family=Poppins:300,400,500,600,700" />
-
-  <!--end::Fonts-->
-  <!--begin::Page Vendors Styles(used by this page)-->
-  <link href="~/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css"
-        rel="stylesheet"
-        type="text/css" />
-
-  <!--end::Page Vendors Styles-->
-  <!--begin::Global Theme Styles(used by all pages)-->
-  <link href="~/assets/plugins/global/plugins.bundle.css"
-        rel="stylesheet"
-        type="text/css" />
-  <link href="~/assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
-  <link href="~/assets/plugins/custom/prismjs/prismjs.bundle.css"
-        rel="stylesheet"
-        type="text/css" />
-  <link href="~/css/style.bundle.css" rel="stylesheet" type="text/css" />
-  <link href="~/css/pages/login/classic/login-3.css" rel="stylesheet" type="text/css" />
-
-
-  <!--end::Global Theme Styles-->
-  <!--begin::Layout Themes(used by all pages)-->
-  <!--end::Layout Themes-->
+  <link href="~/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css" />
   <link rel="shortcut icon" href="~/assets/media/logos/favicon.ico" />
   <link href="~/css/site.css" rel="stylesheet" />
 </head>
@@ -193,24 +168,33 @@
     };
   </script>
 
-  <!--end::Global Config-->
-  <!--begin::Global Theme Bundle(used by all pages)-->
+  @*<script src="~/lib/jquery/dist/jquery.min.js"></script>*@
   <script src="~/assets/plugins/global/plugins.bundle.js"></script>
-  <script src="~/assets/plugins/custom/prismjs/prismjs.bundle.js"></script>
-  <script src="~/assets/js/scripts.bundle.js"></script>
-
-  <!--end::Global Theme Bundle-->
-  <!--begin::Page Vendors(used by this page)-->
-  <script src="~/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>
   <script src="assets/plugins/custom/flot/flot.bundle.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
-  <!--end::Page Vendors-->
-  <!--begin::Page Scripts(used by this page)-->
-  <script src="~/assets/js/pages/widgets.js"></script>
-  <script src="~/assets/plugins/custom/datatables/datatables.bundle.js"></script>
+  <script src="//cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 
   <script>
+    let inputs = document.querySelectorAll('.custom-file-input');
+    Array.prototype.forEach.call(inputs, function (input) {
+      var label = input.nextElementSibling,
+        labelVal = label.innerHTML;
+
+      input.addEventListener('change', function (e) {
+        var fileName = '';
+        if (this.files && this.files.length > 1)
+          fileName = (this.getAttribute('data-multiple-caption') || '').replace('{count}', this.files.length);
+        else
+          fileName = e.target.value.split('\'').pop();
+
+        if (fileName)
+          label.innerText = fileName;
+        else
+          label.innerHTML = labelVal;
+      });
+    });
+
     $(document).ready(function () {
       $('.table').DataTable({
         responsive: true

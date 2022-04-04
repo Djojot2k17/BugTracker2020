@@ -10,15 +10,15 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BugTracker2020.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201128151654_contentType")]
-    partial class contentType
+    [Migration("20220404152800_npgsqlUpdate")]
+    partial class npgsqlUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
-                .HasAnnotation("ProductVersion", "3.1.9")
+                .HasAnnotation("ProductVersion", "3.1.23")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             modelBuilder.Entity("BugTracker2020.Models.BTUser", b =>

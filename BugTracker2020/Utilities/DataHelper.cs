@@ -20,6 +20,7 @@ namespace BugTracker2020.Utilities
 
       // It will be automatically overwritten if we are running on Heroku
       var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
       return string.IsNullOrEmpty(databaseUrl) ? connectionString : BuildConnectionString(databaseUrl);
     }
 
@@ -41,7 +42,8 @@ namespace BugTracker2020.Utilities
         Username = userInfo[0],
         Password = userInfo[1],
         Database = databaseUri.LocalPath.TrimStart('/'),
-        SslMode = SslMode.Require
+        SslMode = SslMode.Prefer,
+        TrustServerCertificate = true
       };
       return builder.ToString();
     }
